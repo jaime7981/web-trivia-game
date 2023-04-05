@@ -1,0 +1,112 @@
+:root {
+    --dark-first-color: #03045E;
+    --dark-second-color: #023E8A;
+    --dark-third-color: #0077B6;
+    --middle-first-color: #0096C7;
+    --middle-second-color: #00B4D8;
+    --middle-third-color: #48CAE4;
+    --ligth-first-color: #90E0EF;
+    --ligth-second-color: #ADE8F4;
+    --ligth-third-color: #CAF0F8;
+    --white-text-color: white;
+    --black-text-color: black;
+}
+
+html {
+    width: 100%;
+    height: 100%;
+    background-color: var(--ligth-third-color);
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: 0px;
+    background-image: linear-gradient(var(--dark-first-color), var(--ligth-third-color));
+}
+
+header {
+    background-color: var(--dark-first-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+#header-logo {
+    width: 30px;
+    height: 30px;
+}
+
+.header-nav {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    width: 100%;
+    height: 30px;
+}
+
+.header-hyperlinks {
+    color: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 0px 5px;
+    text-decoration: none;
+}
+
+.header-hyperlinks p {
+    color: var(--white-text-color);
+    margin: 0px;
+    cursor: pointer;
+}
+
+.header-hyperlinks:hover {
+    background-color: var(--ligth-third-color);
+}
+
+.header-hyperlinks:hover p {
+    color: var(--black-text-color);
+}
+
+.header-login-register {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    height: 30px;
+}
+
+.main-content {
+    background-image: linear-gradient(var(--dark-first-color), var(--ligth-third-color));
+    display: flex;
+    align-items: baseline;
+    justify-content: space-around;
+    width: 100%;
+}
+
+.aside-left {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 25%;
+}
+
+.aside-right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 25%;
+}
+
+.section-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 50%;
+}
