@@ -6,6 +6,7 @@
 
         <link rel="icon" type="image/x-icon" href="./img/trivia-night-transparent.png">
         <script type="text/javascript" src="./js/main.js"></script>
+        <script type="text/javascript" src="./js/register-backend.js"></script>
         <link rel="stylesheet" href="./css/main-style.css">
     </head>
 
@@ -33,13 +34,24 @@
             </aside>
             <section class="section-center">
                 <h2>Register</h2>
-                <form>
-                    <label>Username</label><br>
-                    <input type="text" name="username"><br>
-                    <label>Password</label><br>
-                    <input type="password" name="password"><br>
-                    <input type="submit">
-                </form>
+                <div>
+                    <div>
+                        <p>Username</p>
+                        <input id="id_username" type="text" name="username" maxlength="150" autocapitalize="none" autocomplete="username" autofocus="" required="">
+                    </div>
+                    <div>
+                        <p>Password</p>
+                        <input id="id_password1" type="password" name="password1" autocomplete="new-password" required="">
+                    </div>
+                    <div>
+                        <p>Password Confirmation</p>
+                        <input id="id_password2" type="password" name="password2" autocomplete="new-password" required="">
+                    </div>
+                    <div>
+                        <button id="register-button">Register</button>
+                    </div>
+                </div>
+                <div id="show-form-errors" class="show-errors"></div>
             </section>
             <aside class="aside-right">
                 <h2>Aside Right Test</h2>
