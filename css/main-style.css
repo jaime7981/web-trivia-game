@@ -39,6 +39,10 @@ header {
     width: 100%;
 }
 
+h2 {
+    color: var(--white-text-color);
+}
+
 #header-logo {
     width: var(--header-height);
     height: var(--header-height);
