@@ -1,0 +1,36 @@
+
+
+#show-all-games {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.game-data {
+    background-color: var(--middle-first-color);
+    border-color: black;
+    border-style: solid;
+    display: flex;
+    flex-direction: column;
+    margin: 2px;
+    border-width: 2px;
+    border-radius: 5px;
+    padding: 2px;
+    width: min-content;
+}
+
+.aside-left {
+    margin: 5px;
+    padding: 10px;
+    width: min-content;
+}
+
+.section-center {
+    width: max-content;
+}
+
+.aside-right {
+    margin: 5px;
+    padding: 10px;
+    width: min-content;
+}

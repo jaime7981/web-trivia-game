@@ -6,7 +6,9 @@
 
         <link rel="icon" type="image/x-icon" href="./img/trivia-night-transparent.png">
         <script type="text/javascript" src="./js/main.js"></script>
+        <script type="text/javascript" src="./js/games-backend.js"></script>
         <link rel="stylesheet" href="./css/main-style.css">
+        <link rel="stylesheet" href="./css/games.css">
     </head>
 
     <body>
@@ -25,28 +27,27 @@
         <div class="main-content">
             <aside class="aside-left">
                 <h2>Create Game</h2>
-                <form>
-                    <label>Name</label><br>
-                    <input type="text" name="game-name"><br>
-                    <input type="submit">
-                </form>
+                <div>
+                    <div>
+                        <p>Name</p>
+                        <input id="id-new-game-name" type="text" name="new-game-name" required="">
+                    </div>
+                    <div>
+                        <p>Question Time</p>
+                        <input id="id-new-game-question-time" type="number" name="new-game-question-time" required="">
+                    </div>
+                    <div>
+                        <p>Answer Time</p>
+                        <input id="id-new-game-answer-time" type="number" name="new-game-answer-time" required="">
+                    </div>
+                    <div>
+                        <button id="create-game-button">Create Game</button>
+                    </div>
+                </div>
             </aside>
             <section class="section-center">
                 <h2>All Games</h2>
-                <div>
-                    <div>
-                        <p>Game One Name</p>
-                        <p>Players: 5/6</p>
-                        <p>Subject: Science</p>
-                        <button>JOIN</button>
-                    </div><br>
-                    <div>
-                        <p>Game Two Name</p>
-                        <p>Players: 2/4</p>
-                        <p>Subject: Sports</p>
-                        <button>JOIN</button>
-                    </div>
-                </div>
+                <div id="show-all-games"></div>
             </section>
             <aside class="aside-right">
                 <h2>Your Games</h2>

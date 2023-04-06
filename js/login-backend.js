@@ -25,7 +25,7 @@ window.onload = function pageonLoad() {
                     let loginJWTTokens = JSON.parse(httpRequest.responseText);
                     localStorage.setItem("refresh_token", loginJWTTokens["refresh"]);
                     localStorage.setItem("access_token", loginJWTTokens["access"]);
-                    window.location = "./show_create_game.html";
+                    window.location = "./games.html";
                 } else {
                     console.log("Something went wrong");
                     while (showFormErrors.firstChild) {
