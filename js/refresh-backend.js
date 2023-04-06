@@ -1,21 +1,24 @@
 
 window.onload = function pageonLoad() {
     console.log("loaded register-backend.js");
-    let loginButton = document.getElementById("login-button");
-    let showFormErrors = document.getElementById("show-form-errors");
-    let username = document.getElementById("id_username");
-    let password = document.getElementById("id_password");
     let httpRequest = new XMLHttpRequest();
+    let refresh_token = localStorage.getItem("refresh_token");
+    
+    if (refresh_token == null) {
+        console.log("refresh_token does not exist");
+        return false;
+    }
+    else if (refresh_token == "") {
+        console.log("refresh_token does not exist");
+        return false;
+    }
 
-    loginButton.addEventListener("click", function (e) {
-        // Prepare json data
-        let jsonData = JSON.stringify({"username" : "G12_" + username.value,
-                                       "password" : password.value});
-        
-        httpRequest.open("POST", "https://trivia-bck.herokuapp.com/api/token/", true);
-        httpRequest.setRequestHeader('Content-Type', 'application/json');
-        httpRequest.send(jsonData);
-    });
+    let jsonData = JSON.stringify({"token_refresh" : refresh_token});
+    
+    httpRequest.open("POST", "https://trivia-bck.herokuapp.com/api/token/refresh/", true);
+    httpRequest.setRequestHeader('Content-Type', 'application/json');
+    httpRequest.send(jsonData);
+
     httpRequest.onreadystatechange = () => {
         try {
             if (httpRequest.readyState === XMLHttpRequest.DONE) {
@@ -23,9 +26,9 @@ window.onload = function pageonLoad() {
                 console.log(httpRequest.statusText);
                 if (httpRequest.status === 200) {
                     let loginJWTTokens = JSON.parse(httpRequest.responseText);
-                    localStorage.setItem("refresh_token", loginJWTTokens["refresh"]);
-                    localStorage.setItem("access_token", loginJWTTokens["access"]);
-                    window.location = "./show_create_game.html";
+                    console.log(loginJWTTokens);
+                    console.log(loginJWTTokens["refresh"]);
+                    console.log(loginJWTTokens["access"]);
                 } else {
                     console.log("Something went wrong");
                     while (showFormErrors.firstChild) {
@@ -46,5 +49,4 @@ window.onload = function pageonLoad() {
             showFormErrors.appendChild(errorNode);
         }  
     };
-
 }

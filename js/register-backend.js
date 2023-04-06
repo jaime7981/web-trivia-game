@@ -1,5 +1,4 @@
 
-
 window.onload = function pageonLoad() {
     console.log("loaded register-backend.js");
     let registerButton = document.getElementById("register-button");
@@ -11,14 +10,12 @@ window.onload = function pageonLoad() {
 
     registerButton.addEventListener("click", function (e) {
         // Prepare form data
-        formData = new FormData();
+        let formData = new FormData();
         formData.append("username", "G12_" + username.value);
         formData.append("password1", password1.value);
         formData.append("password2", password2.value);
 
-
         httpRequest.open("POST", "https://trivia-bck.herokuapp.com/registration/", true);
-
         httpRequest.send(formData);
     });
     httpRequest.onreadystatechange = () => {
@@ -71,5 +68,4 @@ window.onload = function pageonLoad() {
             console.log(`Caught Exception: ${e.description}`);
         }  
     };
-
 }
