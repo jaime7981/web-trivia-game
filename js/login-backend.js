@@ -1,7 +1,7 @@
 
 window.onload = function pageonLoad() {
     console.log("loaded register-backend.js");
-    let loginButton = document.getElementById("login-button");
+    let loginButton = document.getElementById("id-login-button");
     let showFormErrors = document.getElementById("show-form-errors");
     let username = document.getElementById("id_username");
     let password = document.getElementById("id_password");
