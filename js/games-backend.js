@@ -69,7 +69,9 @@ Game.prototype.createGameNode = function() {
     gameNode.appendChild(endedNode);
 
     const gameId = this.id;
-    if (this.started == null) {
+    const gameName = this.name;
+
+    if (this.started == null && gameName.search("G12_") == -1) {
         const joinButtonNode = document.createElement('button');
         joinButtonNode.addEventListener("click", function (e) {
             joinGameRequest(httpRequest, gameId);
@@ -78,13 +80,14 @@ Game.prototype.createGameNode = function() {
         gameNode.appendChild(joinButtonNode);
     }
 
-    const deleteGameButtonNode = document.createElement('button');
-    deleteGameButtonNode.addEventListener("click", function (e) {
-        deleteGameRequest(httpRequest, gameId);
-    });
-    deleteGameButtonNode.textContent = "DELETE GAME";
-    gameNode.appendChild(deleteGameButtonNode);
-
+    if (gameName.search("G12_") != -1) {
+        const deleteGameButtonNode = document.createElement('button');
+        deleteGameButtonNode.addEventListener("click", function (e) {
+            deleteGameRequest(httpRequest, gameId);
+        });
+        deleteGameButtonNode.textContent = "DELETE GAME";
+        gameNode.appendChild(deleteGameButtonNode);
+    }
 
     return gameNode;
 };
@@ -113,7 +116,7 @@ function createGameRequest(httpRequest) {
     if (isValidToken(access_token) == false) {
         return null;
     }
-    jsonData = JSON.stringify({"name" : newGameName.value,
+    jsonData = JSON.stringify({"name" : "G12_" + newGameName.value,
                                "question_time" : newGameQuestionTime.value,
                                "answer_time" : newGameAnswerTime.value});
     
