@@ -68,15 +68,23 @@ Game.prototype.createGameNode = function() {
     endedNode.textContent = `Ended: ${this.ended}`;
     gameNode.appendChild(endedNode);
 
+    const gameId = this.id;
     if (this.started == null) {
         const joinButtonNode = document.createElement('button');
-        const gameId = this.id;
         joinButtonNode.addEventListener("click", function (e) {
             joinGameRequest(httpRequest, gameId);
         });
         joinButtonNode.textContent = "JOIN GAME";
         gameNode.appendChild(joinButtonNode);
     }
+
+    const deleteGameButtonNode = document.createElement('button');
+    deleteGameButtonNode.addEventListener("click", function (e) {
+        deleteGameRequest(httpRequest, gameId);
+    });
+    deleteGameButtonNode.textContent = "DELETE GAME";
+    gameNode.appendChild(deleteGameButtonNode);
+
 
     return gameNode;
 };
@@ -145,6 +153,19 @@ function joinGameRequest(httpRequest, gameId) {
     httpRequest.send();
 }
 
+function deleteGameRequest(httpRequest, gameId) {
+    let access_token = localStorage.getItem("access_token");
+
+    if (isValidToken(access_token) == false) { 
+        return null;
+    }
+
+    httpRequest.onreadystatechange = deleteGameResponse;
+    httpRequest.open("DELETE", `https://trivia-bck.herokuapp.com/api/games/${gameId}/`, true);
+    httpRequest.setRequestHeader('Authorization', 'Bearer ' + access_token);
+    httpRequest.send();
+}
+
 function loadAllGamesResponse() {
     httpRequest = this;
     let allGamesNode = document.getElementById("show-all-games");
@@ -194,7 +215,9 @@ function createGameResponse() {
             console.log(httpRequest.status);
             console.log(httpRequest.statusText);
             if (httpRequest.status === 200) {
-                console.log(httpRequest.responseText);
+                location.reload();
+            }
+            else if (httpRequest.status === 201) {
                 location.reload();
             }
             else if (httpRequest.status === 401) {
@@ -206,8 +229,8 @@ function createGameResponse() {
             }
             else {
                 console.log("Something went wrong");
-                console.log(httpRequest.responseText);
-            }              
+            }
+            console.log(httpRequest.responseText);           
         } else {
             console.log("Prossecing request");
         }
@@ -244,6 +267,27 @@ function joinGameResponse() {
             console.log(httpRequest.responseText);
             location.reload();
         } else {
+            console.log("Something went wrong");
+        }
+        console.log(httpRequest.responseText);    
+    } else {
+        console.log("Prossecing request");
+    }
+}
+
+function deleteGameResponse() {
+    httpRequest = this;
+    if (httpRequest.readyState === XMLHttpRequest.DONE) {
+        console.log(httpRequest.status);
+        console.log(httpRequest.statusText);
+        if (httpRequest.status === 200) {
+            console.log(httpRequest.responseText);
+            location.reload();
+        }
+        else if (httpRequest.status === 204) {
+            location.reload();
+        }
+        else {
             console.log("Something went wrong");
         }
         console.log(httpRequest.responseText);    
