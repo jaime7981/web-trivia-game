@@ -36,7 +36,7 @@ Game.prototype.createGameNode = function() {
     gameNode.appendChild(roundsNode);
 
     const playerCountNode = document.createElement('span');
-    playerCountNode.textContent = `Players: ${this.players.length}/${this.player_count}`;
+    playerCountNode.textContent = `Player count: ${this.player_count}`;
     gameNode.appendChild(playerCountNode);
 
     const playersNode = document.createElement('div');
@@ -68,10 +68,16 @@ Game.prototype.createGameNode = function() {
     endedNode.textContent = `Ended: ${this.ended}`;
     gameNode.appendChild(endedNode);
 
-    const joinButtonNode = document.createElement('button');
-    joinButtonNode.textContent = "JOIN GAME";
-    gameNode.appendChild(joinButtonNode);
-  
+    if (this.started == null) {
+        const joinButtonNode = document.createElement('button');
+        const gameId = this.id;
+        joinButtonNode.addEventListener("click", function (e) {
+            joinGameRequest(httpRequest, gameId);
+        });
+        joinButtonNode.textContent = "JOIN GAME";
+        gameNode.appendChild(joinButtonNode);
+    }
+
     return gameNode;
 };
 
@@ -126,6 +132,19 @@ function refreshTokenRequest(httpRequest) {
     httpRequest.send(jsonData);
 }
 
+function joinGameRequest(httpRequest, gameId) {
+    let access_token = localStorage.getItem("access_token");
+
+    if (isValidToken(access_token) == false) { 
+        return null;
+    }
+
+    httpRequest.onreadystatechange = joinGameResponse;
+    httpRequest.open("POST", `https://trivia-bck.herokuapp.com/api/games/${gameId}/join_game/`, true);
+    httpRequest.setRequestHeader('Authorization', 'Bearer ' + access_token);
+    httpRequest.send();
+}
+
 function loadAllGamesResponse() {
     httpRequest = this;
     let allGamesNode = document.getElementById("show-all-games");
@@ -176,6 +195,7 @@ function createGameResponse() {
             console.log(httpRequest.statusText);
             if (httpRequest.status === 200) {
                 console.log(httpRequest.responseText);
+                location.reload();
             }
             else if (httpRequest.status === 401) {
                 console.log(JSON.parse(httpRequest.responseText));
@@ -205,6 +225,23 @@ function refreshTokenResponse() {
         if (httpRequest.status === 200) {
             let loginJWTTokens = JSON.parse(httpRequest.responseText);
             localStorage.setItem("access_token", loginJWTTokens["access"]);
+            location.reload();
+        } else {
+            console.log("Something went wrong");
+        }
+        console.log(httpRequest.responseText);    
+    } else {
+        console.log("Prossecing request");
+    }
+}
+
+function joinGameResponse() {
+    httpRequest = this;
+    if (httpRequest.readyState === XMLHttpRequest.DONE) {
+        console.log(httpRequest.status);
+        console.log(httpRequest.statusText);
+        if (httpRequest.status === 200) {
+            console.log(httpRequest.responseText);
             location.reload();
         } else {
             console.log("Something went wrong");
