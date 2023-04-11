@@ -99,7 +99,7 @@ Game.prototype.createGameNode = function() {
         gameNode.appendChild(deleteGameButtonNode);
     }
 
-    if (this.started == null && gameCreatorID != userId && playerinGame == false) {
+    if (this.started == null && gameCreatorID != userId && playerinGame === false) {
         const joinButtonNode = document.createElement('button');
         joinButtonNode.addEventListener("click", function (e) {
             joinGameRequest(httpRequest, gameId);
