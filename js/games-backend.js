@@ -44,7 +44,7 @@ Game.prototype.createGameNode = function() {
     gameNode.appendChild(playersNode);
     for (const player of this.players) {
       const playerNode = document.createElement('p');
-      playerNode.textContent = player;
+      playerNode.textContent = `${player.username} (${player.id})`;
       playersNode.appendChild(playerNode);
     }
   
@@ -53,7 +53,8 @@ Game.prototype.createGameNode = function() {
     gameNode.appendChild(idNode);
   
     const creatorNode = document.createElement('span');
-    creatorNode.textContent = `Creator: ${this.creator}`;
+    // this.creator is a dict with keys id and username
+    creatorNode.textContent = `Creator: ${this.creator.username} (${this.creator.id})`;
     gameNode.appendChild(creatorNode);
   
     const createdNode = document.createElement('span');
@@ -70,17 +71,26 @@ Game.prototype.createGameNode = function() {
 
     const gameId = this.id;
     const gameName = this.name;
+    const gameCreatorID = this.creator.id;
+    const userId = localStorage.getItem("user_id");
+    let playerinGame = false;
 
-    if (this.started == null && gameName.search("G12_") == -1) {
-        const joinButtonNode = document.createElement('button');
-        joinButtonNode.addEventListener("click", function (e) {
-            joinGameRequest(httpRequest, gameId);
-        });
-        joinButtonNode.textContent = "JOIN GAME";
-        gameNode.appendChild(joinButtonNode);
+    for (const player of this.players) {
+        if (player.id == userId) {
+            playerinGame = true;
+        }
     }
 
-    if (gameName.search("G12_") != -1) {
+    if (this.started == null && gameCreatorID == userId) {
+        const startGameButtonNode = document.createElement('button');
+        startGameButtonNode.addEventListener("click", function (e) {
+            // TODO
+            // startGameRequest(httpRequest, gameId);
+            console.log("start game");
+        });
+        startGameButtonNode.textContent = "START GAME";
+        gameNode.appendChild(startGameButtonNode);
+
         const deleteGameButtonNode = document.createElement('button');
         deleteGameButtonNode.addEventListener("click", function (e) {
             deleteGameRequest(httpRequest, gameId);
@@ -89,8 +99,69 @@ Game.prototype.createGameNode = function() {
         gameNode.appendChild(deleteGameButtonNode);
     }
 
+    if (this.started == null && gameCreatorID != userId && playerinGame == false) {
+        const joinButtonNode = document.createElement('button');
+        joinButtonNode.addEventListener("click", function (e) {
+            joinGameRequest(httpRequest, gameId);
+        });
+        joinButtonNode.textContent = "JOIN GAME";
+        gameNode.appendChild(joinButtonNode);
+    }
+
+    if (this.started == null && playerinGame == true && gameCreatorID != userId) {
+        in_game = true;
+        const leaveButtonNode = document.createElement('button');
+        leaveButtonNode.addEventListener("click", function (e) {
+            // TODO
+            // leaveGameRequest(httpRequest, gameId);
+            console.log("leave game");
+        });
+        leaveButtonNode.textContent = "LEAVE GAME";
+        gameNode.appendChild(leaveButtonNode);
+    }
+
     return gameNode;
 };
+
+function getUserIdRequest(httpRequestId) {
+    let access_token = localStorage.getItem("access_token");
+
+    if (isValidToken(access_token) == false) {
+        return null;
+    }
+    
+    httpRequestId.onreadystatechange = getUserIdResponse;
+    httpRequestId.open("GET", "https://trivia-bck.herokuapp.com/api/profile/", true);
+    httpRequestId.setRequestHeader('Authorization', 'Bearer ' + access_token);
+    httpRequestId.send();
+}
+
+function getUserIdResponse() {
+    httpRequestId = this;
+
+    if (httpRequestId.readyState === XMLHttpRequest.DONE) {
+        console.log(httpRequestId.status);
+        console.log(httpRequestId.statusText);
+        if (httpRequestId.status === 200) {
+            console.log("get user data");
+            let userData = JSON.parse(httpRequestId.responseText);
+            localStorage.setItem("user_id", userData.id);
+        }
+        else if (httpRequestId.status === 401) {
+            console.log(JSON.parse(httpRequestId.responseText));
+            let errorCode = JSON.parse(httpRequestId.responseText)["code"];
+            if (errorCode == "token_not_valid") {
+                refreshTokenRequest(httpRequestId);
+            }
+        }
+        else {
+            console.log("Something went wrong");
+            console.log(httpRequestId.responseText);
+        }
+    } else {
+        console.log("Prossecing request");
+    }
+}
 
 function loadAllGamesRequest(httpRequest) {
     let access_token = localStorage.getItem("access_token");
@@ -314,6 +385,12 @@ function isValidToken(access_token) {
 
 window.onload = function pageonLoad() {
     console.log("loaded games-backend.js");
+
+    // GET USER ID
+    let httpRequestId = new XMLHttpRequest();
+    getUserIdRequest(httpRequestId);
+
+    // GET ALL GAMES
     let createGameButton = document.getElementById("create-game-button");
     let httpRequest = new XMLHttpRequest();
 
