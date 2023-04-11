@@ -53,6 +53,7 @@ window.addEventListener("load", function (e) {
             console.log("logged out");
             localStorage.removeItem("refresh_token");
             localStorage.removeItem("access_token");
+            localStorage.removeItem("user_id");
             window.location = "./login.html";
         });
     }
