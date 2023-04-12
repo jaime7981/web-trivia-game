@@ -131,8 +131,73 @@ function createPlayerStatusList(playerList) {
     return true;
 }
 
+function cleanSectionCenterContent() {
+    let sectionCenter = document.getElementsByClassName("section-center");
+
+    while (sectionCenter[0].firstChild) {
+        sectionCenter[0].removeChild(sectionCenter[0].firstChild);
+    }
+}
+
+function loadRecievedAnswers(playerList) {
+    let sectionCenter = document.getElementsByClassName("section-center");
+
+    if (sectionCenter[0] == null) {
+        return false;
+    }
+
+    let headerName = document.createElement("h2");
+    headerName.textContent = "Answers Points";
+    sectionCenter[0].appendChild(headerName);
+
+    let answersEvaluation = document.createElement("div");
+
+    playerList.forEach(player => {
+        let playerAnswersContent = document.createElement("div");
+
+        let playerName = document.createElement("span");
+        playerName.textContent = player.name;
+        playerAnswersContent.appendChild(playerName);
+        playerAnswersContent.appendChild(document.createTextNode(" | "));
+        
+        let playerAnswer = document.createElement("span");
+        playerAnswer.textContent = "playerTestAnswer";
+        playerAnswersContent.appendChild(playerAnswer);
+        playerAnswersContent.appendChild(document.createTextNode(" | "));
+
+        // Answers Evaluation
+        let answerPoints = document.createElement("select");
+        let answerPointsGood = document.createElement("option");
+        let answerPointsMedium = document.createElement("option");
+        let answerPointsBad = document.createElement("option");
+
+        answerPointsGood.value = 2;
+        answerPointsMedium.value = 2;
+        answerPointsBad.value = 2;
+
+        answerPointsGood.innerHTML = "good";
+        answerPointsMedium.innerHTML = "medium";
+        answerPointsBad.innerHTML = "bad";
+
+        answerPoints.appendChild(answerPointsGood);
+        answerPoints.appendChild(answerPointsMedium);
+        answerPoints.appendChild(answerPointsBad);
+        
+        playerAnswersContent.appendChild(answerPoints);
+
+        answersEvaluation.appendChild(playerAnswersContent);
+    });
+    sectionCenter[0].appendChild(answersEvaluation);
+
+    return true;
+}
+
 function debugActionButtons(socket) {
     let sectionCenter = document.getElementsByClassName("section-center");
+
+    let headerName = document.createElement("h2");
+    headerName.textContent = "WebSocket Debug";
+    sectionCenter[0].appendChild(headerName);
 
     let debugBlock = document.createElement("div");
     debugBlock.className = "debug-block";
@@ -169,6 +234,7 @@ function debugActionButtons(socket) {
 window.onload = function pageonLoad() {
     console.log("loaded trivia-backend.js");
 
+    // Socket test
     let socket = new TriviaWebSocket(114);
     socket.loadWebSocketEventlisteners();
     
@@ -176,8 +242,7 @@ window.onload = function pageonLoad() {
         console.log(event.data);
     };
 
-    debugActionButtons(socket);
-
+    // Fake player data
     let playersTestData = [];
     playersTestData.push(
         new Player("player one", 1, "connected", 0, 0, 0, 0),
@@ -185,6 +250,28 @@ window.onload = function pageonLoad() {
         new Player("player three", 3, "waiting", 0, 0, 0, 0)
     );
 
+    // Load initial data
     createPlayerStatusList(playersTestData);
+
+    // Create and load side panels buttons
+    let asideLeftBlock = document.getElementsByClassName("aside-left");
+    
+    let rateAnswersButton = document.createElement("button");
+    rateAnswersButton.innerHTML = "Rate Answers";
+    asideLeftBlock[0].appendChild(rateAnswersButton);
+
+    let debugButton = document.createElement("button");
+    debugButton.innerHTML = "WebSocket Debug";
+    asideLeftBlock[0].appendChild(debugButton);
+
+    rateAnswersButton.addEventListener("click", function (e) {
+        cleanSectionCenterContent();
+        loadRecievedAnswers(playersTestData);
+    })
+    
+    debugButton.addEventListener("click", function (e) {
+        cleanSectionCenterContent();
+        debugActionButtons(socket);
+    })
 
 }
