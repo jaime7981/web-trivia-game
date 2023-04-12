@@ -172,8 +172,8 @@ function loadRecievedAnswers(playerList) {
         let answerPointsBad = document.createElement("option");
 
         answerPointsGood.value = 2;
-        answerPointsMedium.value = 2;
-        answerPointsBad.value = 2;
+        answerPointsMedium.value = 1;
+        answerPointsBad.value = 0;
 
         answerPointsGood.innerHTML = "good";
         answerPointsMedium.innerHTML = "medium";
