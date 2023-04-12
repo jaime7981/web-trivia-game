@@ -139,6 +139,49 @@ function cleanSectionCenterContent() {
     }
 }
 
+function askQuestion() {
+    let sectionCenter = document.getElementsByClassName("section-center");
+
+    if (sectionCenter[0] == null) {
+        return false;
+    }
+
+    let headerName = document.createElement("h2");
+    headerName.textContent = "Ask Question";
+    sectionCenter[0].appendChild(headerName);
+
+    let questionDiv = document.createElement("div");
+    questionDiv.className = "question-div";
+
+    let questionInput = document.createElement("input");
+    questionInput.type = "text";
+    questionInput.placeholder = "Question";
+    questionDiv.appendChild(questionInput);
+
+    let questionAnswer = document.createElement("input");
+    questionAnswer.type = "text";
+    questionAnswer.placeholder = "Answer";
+    questionDiv.appendChild(questionAnswer);
+
+    let questionButton = document.createElement("button");
+    questionButton.innerHTML = "Send Question";
+    questionDiv.appendChild(questionButton);
+
+    sectionCenter[0].appendChild(questionDiv);
+
+    questionButton.onclick = function() {
+        let question = questionInput.value;
+        let answer = questionAnswer.value;
+        let questionJson = {"question":question, "answer":answer};
+        
+        let doneMessage = document.createElement("span");
+        doneMessage.textContent = "Question sent";
+        questionDiv.appendChild(doneMessage);
+    }
+
+    return true
+}
+
 function loadRecievedAnswers(playerList) {
     let sectionCenter = document.getElementsByClassName("section-center");
 
@@ -260,6 +303,10 @@ window.onload = function pageonLoad() {
     rateAnswersButton.innerHTML = "Rate Answers";
     asideLeftBlock[0].appendChild(rateAnswersButton);
 
+    let askQuestionButton = document.createElement("button");
+    askQuestionButton.innerHTML = "Ask Question";
+    asideLeftBlock[0].appendChild(askQuestionButton);
+
     let debugButton = document.createElement("button");
     debugButton.innerHTML = "WebSocket Debug";
     asideLeftBlock[0].appendChild(debugButton);
@@ -268,7 +315,12 @@ window.onload = function pageonLoad() {
         cleanSectionCenterContent();
         loadRecievedAnswers(playersTestData);
     })
-    
+
+    askQuestionButton.addEventListener("click", function (e) {
+        cleanSectionCenterContent();
+        askQuestion();
+    })
+
     debugButton.addEventListener("click", function (e) {
         cleanSectionCenterContent();
         debugActionButtons(socket);
