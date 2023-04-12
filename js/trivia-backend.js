@@ -16,10 +16,14 @@ class Game {
 }
 
 class Player {
-    constructor(playerName, playerId, playerStatus) {
+    constructor(playerName, playerId, playerStatus, playerScore, playerPregunton, playerFaults, playerKO) {
         this.name = playerName;
         this.id = playerId;
         this.status = playerStatus;
+        this.playerScore = playerScore;
+        this.playerPregunton = playerPregunton;
+        this.playerFaults = playerFaults;
+        this.playerKO = playerKO;
     }
 }
 
@@ -50,7 +54,7 @@ class TriviaWebSocket {
 
         this.socket.addEventListener("error", (event) => {
             // window.location = "./games.html";
-            console.log("WebSocket Error: " + event.ToString());
+            console.log("WebSocket Error: ", event.data);
         });
 
         this.socket.addEventListener("message", (event) => {
@@ -96,7 +100,79 @@ function createPlayerStatusList(playerList) {
 
         gameStatusList.appendChild(playerContent);
     });
-    asideRight[0].appendChild(gameStatusList);
+    // asideRight[0].appendChild(gameStatusList);
+
+    // Create table with headers 'Name', 'Id', 'Status', 'Score', 'Pregunton', 'Faults', 'KO'
+    let gameStatusTable = document.createElement("table");
+    gameStatusTable.className = "players-status-table";
+
+    let tableHeader = document.createElement("tr");
+
+    let tableHeaderName = document.createElement("th");
+    tableHeaderName.textContent = "Name";
+    tableHeader.appendChild(tableHeaderName);
+
+    let tableHeaderId = document.createElement("th");
+    tableHeaderId.textContent = "ID";
+    tableHeader.appendChild(tableHeaderId);
+
+    let tableHeaderStatus = document.createElement("th");
+    tableHeaderStatus.textContent = "Status";
+    tableHeader.appendChild(tableHeaderStatus);
+
+    let tableHeaderScore = document.createElement("th");
+    tableHeaderScore.textContent = "Score";
+    tableHeader.appendChild(tableHeaderScore);
+
+    let tableHeaderPregunton = document.createElement("th");
+    tableHeaderPregunton.textContent = "Asker";
+    tableHeader.appendChild(tableHeaderPregunton);
+
+    let tableHeaderFaults = document.createElement("th");
+    tableHeaderFaults.textContent = "F";
+    tableHeader.appendChild(tableHeaderFaults);
+
+    let tableHeaderKO = document.createElement("th");
+    tableHeaderKO.textContent = "KO";
+    tableHeader.appendChild(tableHeaderKO);
+
+    gameStatusTable.appendChild(tableHeader);
+
+    playerList.forEach(player => {
+        let tableRow = document.createElement("tr");
+
+        let tableRowName = document.createElement("td");
+        tableRowName.textContent = player.name;
+        tableRow.appendChild(tableRowName);
+
+        let tableRowId = document.createElement("td");
+        tableRowId.textContent = player.id;
+        tableRow.appendChild(tableRowId);
+
+        let tableRowStatus = document.createElement("td");
+        tableRowStatus.textContent = player.status;
+        tableRow.appendChild(tableRowStatus);
+
+        let tableRowScore = document.createElement("td");
+        tableRowScore.textContent = player.playerScore;
+        tableRow.appendChild(tableRowScore);
+
+        let tableRowPregunton = document.createElement("td");
+        tableRowPregunton.textContent = player.playerPregunton;
+        tableRow.appendChild(tableRowPregunton);
+
+        let tableRowFaults = document.createElement("td");
+        tableRowFaults.textContent = player.playerFaults;
+        tableRow.appendChild(tableRowFaults);
+
+        let tableRowKO = document.createElement("td");
+        tableRowKO.textContent = player.playerKO;
+        tableRow.appendChild(tableRowKO);
+
+        gameStatusTable.appendChild(tableRow);
+    });
+
+    asideRight[0].appendChild(gameStatusTable);
 
     return true;
 }
@@ -149,9 +225,11 @@ window.onload = function pageonLoad() {
     debugActionButtons(socket);
 
     let playersTestData = [];
-    playersTestData.push(new Player("player one", 1, "connected"),
-                         new Player("player two", 2, "connected"),
-                         new Player("player three", 3, "waiting to join"));
+    playersTestData.push(
+        new Player("player one", 1, "connected", 0, 0, 0, 0),
+        new Player("player two", 2, "connected", 0, 0, 0, 0),
+        new Player("player three", 3, "waiting to join", 0, 0, 0, 0)
+    );
 
     createPlayerStatusList(playersTestData);
 
