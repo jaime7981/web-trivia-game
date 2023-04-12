@@ -29,6 +29,7 @@ function loadNavbarButtons() {
     
     if (headerNav.length >= 1 && headerLoginNav.length >= 1) {
         headerNav[0].appendChild(createNavButton("index"));
+        headerNav[0].appendChild(createNavButton("trivia"));
         console.log(headerNav[0]);
         if (access_token != null) {
             headerNav[0].appendChild(createNavButton("games"));
