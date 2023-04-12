@@ -80,6 +80,10 @@ function createPlayerStatusList(playerList) {
     headerName.textContent = "Players";
     asideRight[0].appendChild(headerName);
 
+    let headerNames = document.createElement("h5");
+    headerNames.textContent = "Name | ID | Status | Score | Asker | Faults | KO";
+    asideRight[0].appendChild(headerNames);
+
     let gameStatusList = document.createElement("div");
     gameStatusList.className = "players-status-aside";
 
@@ -89,90 +93,40 @@ function createPlayerStatusList(playerList) {
         let playerName = document.createElement("span");
         playerName.textContent = player.name;
         playerContent.appendChild(playerName);
+        playerContent.appendChild(document.createTextNode(" | "));
 
         let playerId = document.createElement("span");
         playerId.textContent = player.id;
         playerContent.appendChild(playerId);
+        playerContent.appendChild(document.createTextNode(" | "));
 
         let playerStatus = document.createElement("span");
         playerStatus.textContent = player.status;
         playerContent.appendChild(playerStatus);
+        playerContent.appendChild(document.createTextNode(" | "));
+
+        let playerScore = document.createElement("span");
+        playerScore.textContent = player.playerScore;
+        playerContent.appendChild(playerScore);
+        playerContent.appendChild(document.createTextNode(" | "));
+
+        let playerPregunton = document.createElement("span");
+        playerPregunton.textContent = player.playerPregunton;
+        playerContent.appendChild(playerPregunton);
+        playerContent.appendChild(document.createTextNode(" | "));
+
+        let playerFaults = document.createElement("span");
+        playerFaults.textContent = player.playerFaults;
+        playerContent.appendChild(playerFaults);
+        playerContent.appendChild(document.createTextNode(" | "));
+
+        let playerKO = document.createElement("span");
+        playerKO.textContent = player.playerKO;
+        playerContent.appendChild(playerKO);
 
         gameStatusList.appendChild(playerContent);
     });
-    // asideRight[0].appendChild(gameStatusList);
-
-    // Create table with headers 'Name', 'Id', 'Status', 'Score', 'Pregunton', 'Faults', 'KO'
-    let gameStatusTable = document.createElement("table");
-    gameStatusTable.className = "players-status-table";
-
-    let tableHeader = document.createElement("tr");
-
-    let tableHeaderName = document.createElement("th");
-    tableHeaderName.textContent = "Name";
-    tableHeader.appendChild(tableHeaderName);
-
-    let tableHeaderId = document.createElement("th");
-    tableHeaderId.textContent = "ID";
-    tableHeader.appendChild(tableHeaderId);
-
-    let tableHeaderStatus = document.createElement("th");
-    tableHeaderStatus.textContent = "Status";
-    tableHeader.appendChild(tableHeaderStatus);
-
-    let tableHeaderScore = document.createElement("th");
-    tableHeaderScore.textContent = "Score";
-    tableHeader.appendChild(tableHeaderScore);
-
-    let tableHeaderPregunton = document.createElement("th");
-    tableHeaderPregunton.textContent = "Asker";
-    tableHeader.appendChild(tableHeaderPregunton);
-
-    let tableHeaderFaults = document.createElement("th");
-    tableHeaderFaults.textContent = "F";
-    tableHeader.appendChild(tableHeaderFaults);
-
-    let tableHeaderKO = document.createElement("th");
-    tableHeaderKO.textContent = "KO";
-    tableHeader.appendChild(tableHeaderKO);
-
-    gameStatusTable.appendChild(tableHeader);
-
-    playerList.forEach(player => {
-        let tableRow = document.createElement("tr");
-
-        let tableRowName = document.createElement("td");
-        tableRowName.textContent = player.name;
-        tableRow.appendChild(tableRowName);
-
-        let tableRowId = document.createElement("td");
-        tableRowId.textContent = player.id;
-        tableRow.appendChild(tableRowId);
-
-        let tableRowStatus = document.createElement("td");
-        tableRowStatus.textContent = player.status;
-        tableRow.appendChild(tableRowStatus);
-
-        let tableRowScore = document.createElement("td");
-        tableRowScore.textContent = player.playerScore;
-        tableRow.appendChild(tableRowScore);
-
-        let tableRowPregunton = document.createElement("td");
-        tableRowPregunton.textContent = player.playerPregunton;
-        tableRow.appendChild(tableRowPregunton);
-
-        let tableRowFaults = document.createElement("td");
-        tableRowFaults.textContent = player.playerFaults;
-        tableRow.appendChild(tableRowFaults);
-
-        let tableRowKO = document.createElement("td");
-        tableRowKO.textContent = player.playerKO;
-        tableRow.appendChild(tableRowKO);
-
-        gameStatusTable.appendChild(tableRow);
-    });
-
-    asideRight[0].appendChild(gameStatusTable);
+    asideRight[0].appendChild(gameStatusList);
 
     return true;
 }
@@ -228,7 +182,7 @@ window.onload = function pageonLoad() {
     playersTestData.push(
         new Player("player one", 1, "connected", 0, 0, 0, 0),
         new Player("player two", 2, "connected", 0, 0, 0, 0),
-        new Player("player three", 3, "waiting to join", 0, 0, 0, 0)
+        new Player("player three", 3, "waiting", 0, 0, 0, 0)
     );
 
     createPlayerStatusList(playersTestData);
