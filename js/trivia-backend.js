@@ -43,8 +43,8 @@ class TriviaWebSocket {
 
     loadWebSocketEventlisteners() {
         this.socket.addEventListener("open", (event) => {
-            this.socket.send("Hello Server!");
-            console.log("Message sent to server");
+            //this.socket.send("Hello Server!");
+            //console.log("Message sent to server");
         });
 
         this.socket.addEventListener("close", (event) => {
@@ -65,6 +65,12 @@ class TriviaWebSocket {
     sendMessage(action, message) {
         console.log(this.socket.readyState);
         let socketJsonMessage = {"action":action, "text":message};
+        this.socket.send(JSON.stringify(socketJsonMessage));
+    }
+
+    startGame(rounds) {
+        console.log(this.socket.readyState);
+        let socketJsonMessage = {"action":"start", "rounds":rounds};
         this.socket.send(JSON.stringify(socketJsonMessage));
     }
 }
@@ -232,6 +238,10 @@ function loadRecievedAnswers(playerList) {
     });
     sectionCenter[0].appendChild(answersEvaluation);
 
+    let rateAnswersButton = document.createElement("button");
+    rateAnswersButton.innerHTML = "Send Ratings";
+    sectionCenter[0].appendChild(rateAnswersButton);
+
     return true;
 }
 
@@ -280,6 +290,11 @@ window.onload = function pageonLoad() {
     // Socket test
     let socket = new TriviaWebSocket(114);
     socket.loadWebSocketEventlisteners();
+
+    let startGameButton = document.getElementById("start-game-button");
+    startGameButton.addEventListener("click", function (e) {
+        socket.startGame(5);
+    })
     
     socket.onmessage = (event) => {
         console.log(event.data);
