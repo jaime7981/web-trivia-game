@@ -1,13 +1,18 @@
 
 export class Player {
-    constructor(playerName, playerId, playerStatus, playerScore, playerPregunton, playerFaults, playerKO) {
-        this.name = playerName;
+    constructor(playerId, playerName, gamesJoined, gamesCreated) {
+        // Api Values
         this.id = playerId;
-        this.status = playerStatus;
-        this.playerScore = playerScore;
-        this.playerPregunton = playerPregunton;
-        this.playerFaults = playerFaults;
-        this.playerKO = playerKO;
+        this.username = playerName;
+        this.gamesJoined = gamesJoined;
+        this.gamesCreated = gamesCreated;
+
+        // Default Values
+        this.status = "offline";
+        this.playerScore = 0;
+        this.playerPregunton = false;
+        this.playerFaults = 0;
+        this.playerKO = true;
     }
 }
 
