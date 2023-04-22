@@ -13,6 +13,12 @@ export class TriviaWebSocket {
         this.socket = new WebSocket(`wss://trivia-bck.herokuapp.com/ws/trivia/${this.gameId}/?token=${this.token}`);
     }
 
+    restartWebSocket() {
+        this.token = localStorage.getItem("access_token");
+        this.socket = new WebSocket(`wss://trivia-bck.herokuapp.com/ws/trivia/${this.gameId}/?token=${this.token}`);
+        this.loadWebSocketEventlisteners();
+    }
+
     loadWebSocketEventlisteners() {
         this.socket.addEventListener("open", (event) => {
             console.log("Web socket open");
@@ -20,6 +26,7 @@ export class TriviaWebSocket {
 
         this.socket.addEventListener("close", (event) => {
             console.log("Closed conection to the server");
+            this.restartWebSocket();
         });
 
         this.socket.addEventListener("error", (event) => {

@@ -1,6 +1,7 @@
 import { Game } from "./modules/game.js";
 import { Player, createPlayerStatusList } from "./modules/player.js";
 import { TriviaWebSocket } from "./modules/trivia-ws.js";
+import { GameAPI } from "./modules/game-api.js";
 
 function cleanSectionCenterContent() {
     let sectionCenter = document.getElementsByClassName("section-center");
@@ -155,6 +156,13 @@ window.onload = function pageonLoad() {
     // Socket test
     let socket = new TriviaWebSocket(114);
     socket.loadWebSocketEventlisteners();
+
+    // Fetch API Test
+    let gameApi = new GameAPI();
+    //console.log(gameApi.getRequest("https://trivia-bck.herokuapp.com/api/profile/"));
+    (async () => {
+        console.log(await gameApi.sendRequest("https://trivia-bck.herokuapp.com/api/profile/"));
+    })()
 
     let startGameButton = document.getElementById("start-game-button");
     startGameButton.addEventListener("click", function (e) {
