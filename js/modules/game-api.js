@@ -31,8 +31,7 @@ export class GameAPI {
             await fetch('https://trivia-bck.herokuapp.com/api/token/refresh/', refreshOptions)
             .then(resp => resp.json())
             .then(json => {
-                let jsonResponse = json["access"];
-                localStorage.setItem("access_token", jsonResponse);
+                localStorage.setItem("access_token", json["access"]);
             });
         }
         catch (e) {
@@ -63,8 +62,8 @@ export class GameAPI {
             console.log(response.status);
 
             if (response.status == 401) {
-                await this.refreshToken(access_token)
-                .then(this.sendRequest(url, method, body));
+                await this.refreshToken(access_token);
+                // .then(await this.sendRequest(url, method, body));
                 return "expired or invalid token";
             }
             else if (response.status == 500) {

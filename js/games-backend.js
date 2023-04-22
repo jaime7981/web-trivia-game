@@ -54,14 +54,6 @@ async function createGameRequest(name, questionTime, answerTime) {
     await gameApi.sendRequest("https://trivia-bck.herokuapp.com/api/games/", "POST", gameData);
 }
 
-async function joinGameRequest(gameId) {
-    await gameApi.sendRequest(`https://trivia-bck.herokuapp.com/api/games/${gameId}/join_game/`, "POST");
-}
-
-async function deleteGameRequest(gameId) {
-    await gameApi.sendRequest(`https://trivia-bck.herokuapp.com/api/games/${gameId}/join_game/`, "DELETE");
-}
-
 window.onload = function pageonLoad() {
     getUserRequest();
     loadAllGamesRequest();

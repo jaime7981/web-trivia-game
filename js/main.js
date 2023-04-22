@@ -29,7 +29,6 @@ function loadNavbarButtons() {
     
     if (headerNav.length >= 1 && headerLoginNav.length >= 1) {
         headerNav[0].appendChild(createNavButton("index"));
-        console.log(headerNav[0]);
         if (access_token != null) {
             headerNav[0].appendChild(createNavButton("games"));
             headerNav[0].appendChild(createNavButton("trivia"));
@@ -43,7 +42,6 @@ function loadNavbarButtons() {
 }
 
 window.addEventListener("load", function (e) {
-    console.log("loaded DOM");
     loadErrorBlock();
     loadNavbarButtons();
     let logoutButton = document.getElementById("logout-button");
@@ -51,7 +49,6 @@ window.addEventListener("load", function (e) {
     if (logoutButton != null) {
         logoutButton.addEventListener("click", function (e) {
             e.preventDefault();
-            console.log("logged out");
             localStorage.removeItem("refresh_token");
             localStorage.removeItem("access_token");
             localStorage.removeItem("user_id");

@@ -1,3 +1,5 @@
+import { GameAPI as gameApiClass} from "./game-api.js";
+
 export class Game {
     constructor(id, creator, created, player_count, name, question_time, answer_time, rounds_number, started, ended, players) {
         this.id = id;
@@ -11,6 +13,25 @@ export class Game {
         this.started = started;
         this.ended = ended;
         this.players = players;
+
+        this.gameApi = new gameApiClass();
+    }
+
+    async joinGameRequest(gameId) {
+        await gameApi.sendRequest(`https://trivia-bck.herokuapp.com/api/games/${gameId}/join_game/`, "POST");
+    }
+    
+    async deleteGameRequest(gameId) {
+        await gameApi.sendRequest(`https://trivia-bck.herokuapp.com/api/games/${gameId}/join_game/`, "DELETE");
+    }
+
+    async leaveGameRequest(gameId) {
+        await gameApi.sendRequest(`https://trivia-bck.herokuapp.com/api/games/${gameId}/unjoin_game/`, "POST");
+    }
+
+    enterGame(gameId) {
+        console.log(`./trivia.html?gameId=${gameId}`);
+        // window.location.href = `./trivia.html?gameId=${gameId}`;
     }
 }
 
@@ -82,17 +103,13 @@ Game.prototype.createGameNode = function() {
 
     if (this.started == null && gameCreatorID == userId) {
         const startGameButtonNode = document.createElement('button');
-        startGameButtonNode.addEventListener("click", function (e) {
-            // TODO
-            // startGameRequest(httpRequest, gameId);
-            console.log("start game");
-        });
-        startGameButtonNode.textContent = "START GAME";
+        startGameButtonNode.addEventListener("click", this.enterGame(gameId));
+        startGameButtonNode.textContent = "ENTER GAME";
         gameNode.appendChild(startGameButtonNode);
 
         const deleteGameButtonNode = document.createElement('button');
         deleteGameButtonNode.addEventListener("click", function (e) {
-            deleteGameRequest(httpRequest, gameId);
+            this.deleteGameRequest(gameId);
         });
         deleteGameButtonNode.textContent = "DELETE GAME";
         gameNode.appendChild(deleteGameButtonNode);
@@ -101,7 +118,7 @@ Game.prototype.createGameNode = function() {
     if (this.started == null && gameCreatorID != userId && playerinGame === false) {
         const joinButtonNode = document.createElement('button');
         joinButtonNode.addEventListener("click", function (e) {
-            joinGameRequest(httpRequest, gameId);
+            this.joinGameRequest(gameId);
         });
         joinButtonNode.textContent = "JOIN GAME";
         gameNode.appendChild(joinButtonNode);
@@ -111,9 +128,7 @@ Game.prototype.createGameNode = function() {
         in_game = true;
         const leaveButtonNode = document.createElement('button');
         leaveButtonNode.addEventListener("click", function (e) {
-            // TODO
-            // leaveGameRequest(httpRequest, gameId);
-            console.log("leave game");
+            this.leaveGameRequest(gameId);
         });
         leaveButtonNode.textContent = "LEAVE GAME";
         gameNode.appendChild(leaveButtonNode);
