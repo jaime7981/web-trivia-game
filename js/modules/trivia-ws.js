@@ -1,7 +1,12 @@
 
 export class TriviaWebSocket {
     constructor(gameId, accessToken = null) {
-        this.gameId = gameId;
+        if (gameId == null) {
+            this.gameId = 0;
+        }
+        else {
+            this.gameId = gameId;
+        }
 
         if (accessToken == null) {
             this.token = localStorage.getItem("access_token");        
@@ -10,7 +15,12 @@ export class TriviaWebSocket {
             this.token = accessToken;
         }
 
-        this.socket = new WebSocket(`wss://trivia-bck.herokuapp.com/ws/trivia/${this.gameId}/?token=${this.token}`);
+        if (gameId == null) {
+            this.socket = null;
+        }
+        else {
+            this.socket = new WebSocket(`wss://trivia-bck.herokuapp.com/ws/trivia/${this.gameId}/?token=${this.token}`);
+        }
     }
 
     restartWebSocket() {
@@ -20,6 +30,10 @@ export class TriviaWebSocket {
     }
 
     loadWebSocketEventlisteners() {
+        if (this.socket == null) {
+            return false;
+        }
+
         this.socket.addEventListener("open", (event) => {
             console.log("Web socket open");
         });
@@ -39,12 +53,20 @@ export class TriviaWebSocket {
     }
 
     sendMessage(action, message) {
+        if (this.socket == null) {
+            return false;
+        }
+
         console.log(this.socket.readyState);
         let socketJsonMessage = {"action":action, "text":message};
         this.socket.send(JSON.stringify(socketJsonMessage));
     }
 
     startGame(rounds) {
+        if (this.socket == null) {
+            return false;
+        }
+        
         console.log(this.socket.readyState);
         let socketJsonMessage = {"action":"start", "rounds":rounds};
         this.socket.send(JSON.stringify(socketJsonMessage));

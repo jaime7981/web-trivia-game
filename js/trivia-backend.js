@@ -154,7 +154,8 @@ window.onload = function pageonLoad() {
     console.log("loaded trivia-backend.js");
 
     // Socket test
-    let socket = new TriviaWebSocket(114);
+    let params = new URLSearchParams(location.search);
+    let socket = new TriviaWebSocket(params.get('gameId'));
     socket.loadWebSocketEventlisteners();
 
     // Fetch API Test
