@@ -1,6 +1,6 @@
 
 export class Player {
-    constructor(playerId, playerName, gamesJoined, gamesCreated) {
+    constructor(playerId, playerName, gamesJoined = [], gamesCreated = []) {
         // Api Values
         this.id = playerId;
         this.username = playerName;
