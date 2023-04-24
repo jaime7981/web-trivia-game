@@ -24,14 +24,13 @@ export class TriviaGame {
         }
     }
 
-    deletedGame() {
+    deletedGame(game) {
         window.location.href = "./games.html";
     }
     
     gameStarted(rounds, players) {
         this.rounds = rounds;
         
-        //this.players = players;
         for (let i = 0; i < players.length; i ++) {
             let newPlayer = new Player(players[i].id, players[i].username);
             this.players.push(newPlayer);
@@ -53,7 +52,7 @@ export class TriviaGame {
         this.answers.push(userAnswer);
     }
 
-    endSendQuestionTime() {
+    questionTimeEnded() {
         console.log("Se reinicia la ronda eligiendo otro preguntón (puede ser el mismo).");
     }
 

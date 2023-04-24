@@ -1,13 +1,7 @@
+import { TriviaGame } from "./trivia-game.js";
 
 export class TriviaWebSocket {
     constructor(gameId, accessToken = null) {
-        if (gameId == null) {
-            this.gameId = 0;
-        }
-        else {
-            this.gameId = gameId;
-        }
-
         if (accessToken == null) {
             this.token = localStorage.getItem("access_token");        
         }
@@ -17,10 +11,13 @@ export class TriviaWebSocket {
 
         if (gameId == null) {
             this.socket = null;
+            this.gameId = 0;
         }
         else {
             this.socket = new WebSocket(`wss://trivia-bck.herokuapp.com/ws/trivia/${this.gameId}/?token=${this.token}`);
         }
+
+        this.triviaGame = new TriviaGame(this.gameId);
     }
 
     restartWebSocket() {
@@ -48,8 +45,47 @@ export class TriviaWebSocket {
         });
 
         this.socket.addEventListener("message", (event) => {
-            console.log("Message from server ", event.data);
+            this.recieveMessage(event.data);
         });
+    }
+
+    recieveMessage(serverResponse) {
+        let jsonResponse = JSON.parse(serverResponse);
+        let responseType = jsonResponse.type;
+
+        console.log(jsonResponse);
+
+        switch (responseType) {
+            case 'error':
+                console.log("Error: " + jsonResponse.message);
+                break;
+            case 'player_joined':
+                this.triviaGame.playerJoined(jsonResponse.userid, jsonResponse.username);
+                break;
+            case 'player_unjoined':
+                this.triviaGame.playerUnjoined(jsonResponse.userid, jsonResponse.username);
+                break;
+            case 'game_deleted':
+                this.triviaGame.deletedGame(jsonResponse.game);
+                break;
+            case 'game_started':
+                this.triviaGame.gameStarted(jsonResponse.rounds, jsonResponse.players);
+                break;
+            case 'round_started':
+                this.triviaGame.roundStarted(jsonResponse.round_number, jsonResponse.noisy_id);
+                break;
+            case 'round_question':
+                this.triviaGame.recieveQuestion(jsonResponse.question);
+                break;
+            case 'round_answer':
+                this.triviaGame.recieveAnswers(jsonResponse.answer, jsonResponse.userid);
+                break;
+            case 'question_time_ended':
+                this.triviaGame.questionTimeEnded();
+                break;
+            default:
+                console.log(`Type '${responseType}' not handeled`);
+            }
     }
 
     sendMessage(action, message) {
