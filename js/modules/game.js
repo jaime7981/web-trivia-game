@@ -18,7 +18,10 @@ export class Game {
     }
 
     async joinGameRequest(gameId) {
-        await this.gameApi.sendRequest(`https://trivia-bck.herokuapp.com/api/games/${gameId}/join_game/`, "POST");
+        this.gameApi.sendRequest(`https://trivia-bck.herokuapp.com/api/games/${gameId}/join_game/`, "POST")
+        .then(response => {
+            window.location.href = `./trivia.html?gameId=${gameId}`;
+        });
     }
     
     async deleteGameRequest(gameId) {
@@ -30,7 +33,6 @@ export class Game {
     }
 
     enterGame(gameId) {
-        console.log(`./trivia.html?gameId=${gameId}`);
         window.location.href = `./trivia.html?gameId=${gameId}`;
     }
 }

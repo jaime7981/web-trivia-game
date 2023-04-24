@@ -62,13 +62,49 @@ export class TriviaWebSocket {
         this.socket.send(JSON.stringify(socketJsonMessage));
     }
 
-    startGame(rounds) {
+    startGame(rounds = 10) {
         if (this.socket == null) {
             return false;
         }
-        
+
         console.log(this.socket.readyState);
         let socketJsonMessage = {"action":"start", "rounds":rounds};
+        this.socket.send(JSON.stringify(socketJsonMessage));
+    }
+
+    sendQuestion(question = "") {
+        if (this.socket == null) {
+            return null;
+        }
+
+        let socketJsonMessage = {"action":"question", "text":question};
+        this.socket.send(JSON.stringify(socketJsonMessage));
+    }
+
+    sendAnswer(answer = "") {
+        if (this.socket == null) {
+            return null;
+        }
+
+        let socketJsonMessage = {"action":"answer", "text":answer};
+        this.socket.send(JSON.stringify(socketJsonMessage));
+    }
+
+    sendQualification(userId, qualification = 0) {
+        if (this.socket == null) {
+            return null;
+        }
+
+        let socketJsonMessage = {"action":"qualify", "userid":userId, "grade":qualification};
+        this.socket.send(JSON.stringify(socketJsonMessage));
+    }
+
+    sendEvaluation(correctness  = false) {
+        if (this.socket == null) {
+            return null;
+        }
+
+        let socketJsonMessage = {"action":"assess", "correctness":correctness};
         this.socket.send(JSON.stringify(socketJsonMessage));
     }
 }
