@@ -4,18 +4,8 @@ import { Player } from "./modules/player.js";
 
 let gameApi = new GameAPI();
 
-async function getUserRequest() {
-    let player = await gameApi.sendRequest("https://trivia-bck.herokuapp.com/api/profile/");
-    localStorage.setItem("user_id", player.id);
-    let newPlayer = new Player(player.id,
-                               player.username,
-                               player.games_created,
-                               player.games_joined);
-    console.log(newPlayer);
-}
-
 async function loadAllGamesRequest() {
-    let allGamesData = await gameApi.sendRequest("https://trivia-bck.herokuapp.com/api/games/");
+    let allGamesData = await gameApi.getAllGames();
     let allGamesNode = document.getElementById("show-all-games");
     for (let gamePosition = 0; gamePosition < allGamesData.length; gamePosition++) {
         let selectedGameData = allGamesData[gamePosition];
@@ -41,21 +31,15 @@ function createGameButton() {
     let newGameAnswerTime = document.getElementById("id-new-game-answer-time");
 
     createGameButton.addEventListener("click", function (e) {
-        createGameRequest(newGameName.value, newGameQuestionTime.value, newGameAnswerTime.value);
+        gameApi.createGameRequest(newGameName.value, newGameQuestionTime.value, newGameAnswerTime.value);
     });
 }
 
-async function createGameRequest(name, questionTime, answerTime) {
-    let gameData = {
-        "name" : "G12_" + name,
-        "question_time" : questionTime,
-        "answer_time" : answerTime
-    };
-    await gameApi.sendRequest("https://trivia-bck.herokuapp.com/api/games/", "POST", gameData);
-}
-
 window.onload = function pageonLoad() {
-    getUserRequest();
+    gameApi.getLoggedUser()
+    .then(loggedUser => {
+        console.log(loggedUser);
+    });
     loadAllGamesRequest();
     createGameButton();
 }

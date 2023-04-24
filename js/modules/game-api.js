@@ -1,3 +1,4 @@
+import { Player } from "./player.js";
 
 export class GameAPI {
     constructor() {
@@ -76,5 +77,47 @@ export class GameAPI {
         catch (e) {
             console.error("Error:", e);
         }
+    }
+
+    async joinGameRequest(gameId) {
+        this.sendRequest(`https://trivia-bck.herokuapp.com/api/games/${gameId}/join_game/`, "POST")
+        .then(response => {
+            this.enterGame(gameId);
+        });
+    }
+    
+    async deleteGameRequest(gameId) {
+        await this.sendRequest(`https://trivia-bck.herokuapp.com/api/games/${gameId}/join_game/`, "DELETE");
+    }
+
+    async leaveGameRequest(gameId) {
+        await this.sendRequest(`https://trivia-bck.herokuapp.com/api/games/${gameId}/unjoin_game/`, "POST");
+    }
+
+    enterGame(gameId) {
+        window.location.href = `./trivia.html?gameId=${gameId}`;
+    }
+
+    async getLoggedUser() {
+        let player = await this.sendRequest("https://trivia-bck.herokuapp.com/api/profile/");
+        localStorage.setItem("user_id", player.id);
+        let newPlayer = new Player(player.id,
+                                   player.username,
+                                   player.games_created,
+                                   player.games_joined);
+        return newPlayer;
+    }
+
+    async createGameRequest(name, questionTime, answerTime) {
+        let gameData = {
+            "name" : "G12_" + name,
+            "question_time" : questionTime,
+            "answer_time" : answerTime
+        };
+        await this.sendRequest("https://trivia-bck.herokuapp.com/api/games/", "POST", gameData);
+    }
+
+    async getAllGames() {
+        return await this.sendRequest("https://trivia-bck.herokuapp.com/api/games/");
     }
 }
