@@ -63,7 +63,7 @@ export class TriviaGame {
         console.log("Se envía siempre a todos los jugadores, indica que comienza el tiempo para calificación.");
     }
 
-    endSendAnswerTime() {
+    endAssessTime() {
         console.log("Se envía solo si aun faltan calificaciones por realizar (se envía a todos).");
     }
 }

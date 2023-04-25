@@ -18,6 +18,7 @@ function loadStartGame(socket) {
     headerName.textContent = "Start Game";
     sectionCenter[0].appendChild(headerName);
 
+    // Creator Question
     let creatorBlock = document.createElement("div");
     creatorBlock.className = "creator-block";
 
@@ -36,6 +37,8 @@ function loadStartGame(socket) {
         socket.startGame(5);
     });
 
+    // Player Wait
+    // TODO: if statement for common players
     let playerBlock = document.createElement("div");
     playerBlock.className = "player-block";
 
@@ -53,6 +56,7 @@ function askQuestion(socket) {
         return false;
     }
 
+    // Creator Send Question
     let headerName = document.createElement("h2");
     headerName.textContent = "Send Question";
     sectionCenter[0].appendChild(headerName);
@@ -78,6 +82,9 @@ function askQuestion(socket) {
         doneMessage.textContent = "Question sent\n";
         questionDiv.appendChild(doneMessage);
     }, false);
+
+    // Player Wait
+    // TODO: Add Player Wait Message
     return true
 }
 
@@ -113,6 +120,11 @@ function sendAnswer(socket) {
         doneMessage.textContent = "Answer Sent\n";
         answerBlock.appendChild(doneMessage);
     });
+
+    //TODO: Add player waiting for nosy review
+
+    // Nosy Functionalities
+    // TODO: recieve Answers, review Answers
 }
 
 function loadRecievedAnswers(playerList) {
