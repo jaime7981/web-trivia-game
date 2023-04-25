@@ -11,6 +11,41 @@ function cleanSectionCenterContent() {
     }
 }
 
+function loadStartGame(socket) {
+    let sectionCenter = document.getElementsByClassName("section-center");
+
+    let headerName = document.createElement("h2");
+    headerName.textContent = "Start Game";
+    sectionCenter[0].appendChild(headerName);
+
+    let creatorBlock = document.createElement("div");
+    creatorBlock.className = "creator-block";
+
+    let setGameRounds = document.createElement("input");
+    setGameRounds.type = "text";
+    setGameRounds.placeholder = "rounds";
+
+    let startGameButton = document.createElement("button");
+    startGameButton.innerHTML = "Start Game";
+
+    creatorBlock.appendChild(setGameRounds);
+    creatorBlock.appendChild(startGameButton);
+    sectionCenter[0].appendChild(creatorBlock);
+
+    startGameButton.addEventListener("click", function (e) {
+        socket.startGame(5);
+    });
+
+    let playerBlock = document.createElement("div");
+    playerBlock.className = "player-block";
+
+    let playerStartGameInfo = document.createElement("p");
+    playerStartGameInfo.innerHTML = "Waiting for creator to start the game";
+    
+    playerBlock.appendChild(playerStartGameInfo);
+    sectionCenter[0].appendChild(playerBlock);
+}
+
 function askQuestion(socket) {
     let sectionCenter = document.getElementsByClassName("section-center");
 
@@ -19,7 +54,7 @@ function askQuestion(socket) {
     }
 
     let headerName = document.createElement("h2");
-    headerName.textContent = "Ask Question";
+    headerName.textContent = "Send Question";
     sectionCenter[0].appendChild(headerName);
 
     let questionDiv = document.createElement("div");
@@ -29,11 +64,6 @@ function askQuestion(socket) {
     questionInput.type = "text";
     questionInput.placeholder = "Question";
     questionDiv.appendChild(questionInput);
-
-    let questionAnswer = document.createElement("input");
-    questionAnswer.type = "text";
-    questionAnswer.placeholder = "Answer";
-    questionDiv.appendChild(questionAnswer);
 
     let questionButton = document.createElement("button");
     questionButton.innerHTML = "Send Question";
@@ -49,6 +79,40 @@ function askQuestion(socket) {
         questionDiv.appendChild(doneMessage);
     }, false);
     return true
+}
+
+function sendAnswer(socket) {
+    let sectionCenter = document.getElementsByClassName("section-center");
+
+    let headerName = document.createElement("h2");
+    headerName.textContent = "Send Answer";
+    sectionCenter[0].appendChild(headerName);
+
+    let answerBlock = document.createElement("div");
+    answerBlock.className = "answer-block";
+
+    let showQuestion = document.createElement("p");
+    showQuestion.innerHTML = "Question: " + socket.triviaGame.question;
+
+    let setAnswer = document.createElement("input");
+    setAnswer.type = "text";
+    setAnswer.placeholder = "answer";
+
+    let sendAnswerButton = document.createElement("button");
+    sendAnswerButton.innerHTML = "Send Answer";
+
+    answerBlock.appendChild(showQuestion);
+    answerBlock.appendChild(setAnswer);
+    answerBlock.appendChild(sendAnswerButton);
+    sectionCenter[0].appendChild(answerBlock);
+
+    sendAnswerButton.addEventListener("click", async function (e) {
+        let answer = setAnswer.value;
+        await socket.sendAnswer(answer);
+        let doneMessage = document.createElement("span");
+        doneMessage.textContent = "Answer Sent\n";
+        answerBlock.appendChild(doneMessage);
+    });
 }
 
 function loadRecievedAnswers(playerList) {
@@ -108,39 +172,44 @@ function loadRecievedAnswers(playerList) {
     return true;
 }
 
-function loadStartGame(socket) {
-    let sectionCenter = document.getElementsByClassName("section-center");
-
-    let headerName = document.createElement("h2");
-    headerName.textContent = "Start Game";
-    sectionCenter[0].appendChild(headerName);
-
-    let creatorBlock = document.createElement("div");
-    creatorBlock.className = "creator-block";
-
-    let setGameRounds = document.createElement("input");
-    setGameRounds.type = "text";
-    setGameRounds.placeholder = "rounds";
+function loadAsideDebugButtons(socket) {
+    let asideLeftBlock = document.getElementsByClassName("aside-left");
 
     let startGameButton = document.createElement("button");
     startGameButton.innerHTML = "Start Game";
+    asideLeftBlock[0].appendChild(startGameButton);
 
-    creatorBlock.appendChild(setGameRounds);
-    creatorBlock.appendChild(startGameButton);
-    sectionCenter[0].appendChild(creatorBlock);
+    let askQuestionButton = document.createElement("button");
+    askQuestionButton.innerHTML = "Ask Question";
+    asideLeftBlock[0].appendChild(askQuestionButton);
 
-    startGameButton.addEventListener("click", function (e) {
-        socket.startGame(5);
-    });
+    let sendAnswerButton = document.createElement("button");
+    sendAnswerButton.innerHTML = "Send Answer";
+    asideLeftBlock[0].appendChild(sendAnswerButton);
 
-    let playerBlock = document.createElement("div");
-    playerBlock.className = "player-block";
+    let rateAnswersButton = document.createElement("button");
+    rateAnswersButton.innerHTML = "Rate Answers";
+    asideLeftBlock[0].appendChild(rateAnswersButton);
 
-    let playerStartGameInfo = document.createElement("p");
-    playerStartGameInfo.innerHTML = "Waiting for creator to start the game";
-    
-    playerBlock.appendChild(playerStartGameInfo);
-    sectionCenter[0].appendChild(playerBlock);
+    startGameButton.addEventListener("click", function(e) {
+        cleanSectionCenterContent();
+        loadStartGame(socket);
+    }, false);
+
+    askQuestionButton.addEventListener("click", function (e) {
+        cleanSectionCenterContent();
+        askQuestion(socket);
+    })
+
+    sendAnswerButton.addEventListener("click", function (e) {
+        cleanSectionCenterContent();
+        sendAnswer(socket);
+    })
+
+    rateAnswersButton.addEventListener("click", function (e) {
+        cleanSectionCenterContent();
+        loadRecievedAnswers(socket.triviaGame.players);
+    })
 }
 
 window.onload = function pageonLoad() {
@@ -160,36 +229,7 @@ window.onload = function pageonLoad() {
 
     // Start Game Button
     loadStartGame(socket);
-    
 
-    // Create and load side panels buttons
-    let asideLeftBlock = document.getElementsByClassName("aside-left");
-    
     // Buttons for Debuging
-    let startGameButton = document.createElement("button");
-    startGameButton.innerHTML = "Start Game";
-    asideLeftBlock[0].appendChild(startGameButton);
-
-    let askQuestionButton = document.createElement("button");
-    askQuestionButton.innerHTML = "Ask Question";
-    asideLeftBlock[0].appendChild(askQuestionButton);
-
-    let rateAnswersButton = document.createElement("button");
-    rateAnswersButton.innerHTML = "Rate Answers";
-    asideLeftBlock[0].appendChild(rateAnswersButton);
-
-    startGameButton.addEventListener("click", function(e) {
-        cleanSectionCenterContent();
-        loadStartGame(socket);
-    }, false);
-
-    rateAnswersButton.addEventListener("click", function (e) {
-        cleanSectionCenterContent();
-        loadRecievedAnswers(socket.triviaGame.players);
-    })
-
-    askQuestionButton.addEventListener("click", function (e) {
-        cleanSectionCenterContent();
-        askQuestion(socket);
-    })
+    loadAsideDebugButtons(socket);
 }
