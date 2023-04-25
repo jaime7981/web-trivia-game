@@ -11,7 +11,7 @@ function cleanSectionCenterContent() {
     }
 }
 
-function askQuestion() {
+function askQuestion(socket) {
     let sectionCenter = document.getElementsByClassName("section-center");
 
     if (sectionCenter[0] == null) {
@@ -41,16 +41,13 @@ function askQuestion() {
 
     sectionCenter[0].appendChild(questionDiv);
 
-    questionButton.onclick = function() {
+    questionButton.addEventListener("click", async function (e) {
         let question = questionInput.value;
-        let answer = questionAnswer.value;
-        let questionJson = {"question":question, "answer":answer};
-        
+        await socket.sendQuestion(question);
         let doneMessage = document.createElement("span");
-        doneMessage.textContent = "Question sent";
+        doneMessage.textContent = "Question sent\n";
         questionDiv.appendChild(doneMessage);
-    }
-
+    }, false);
     return true
 }
 
@@ -111,43 +108,39 @@ function loadRecievedAnswers(playerList) {
     return true;
 }
 
-function debugActionButtons(socket) {
+function loadStartGame(socket) {
     let sectionCenter = document.getElementsByClassName("section-center");
 
     let headerName = document.createElement("h2");
-    headerName.textContent = "WebSocket Debug";
+    headerName.textContent = "Start Game";
     sectionCenter[0].appendChild(headerName);
 
-    let debugBlock = document.createElement("div");
-    debugBlock.className = "debug-block";
+    let creatorBlock = document.createElement("div");
+    creatorBlock.className = "creator-block";
 
-    let sendMessageToSocket = document.createElement("button");
-    sendMessageToSocket.innerHTML = "send debug data";
+    let setGameRounds = document.createElement("input");
+    setGameRounds.type = "text";
+    setGameRounds.placeholder = "rounds";
 
-    let setActionSocketTextInput = document.createElement("input");
-    setActionSocketTextInput.type = "text";
-    setActionSocketTextInput.placeholder = "action";
+    let startGameButton = document.createElement("button");
+    startGameButton.innerHTML = "Start Game";
 
-    let sendMessageToSocketTextInput = document.createElement("input");
-    sendMessageToSocketTextInput.type = "text";
-    sendMessageToSocketTextInput.placeholder = "text data";
+    creatorBlock.appendChild(setGameRounds);
+    creatorBlock.appendChild(startGameButton);
+    sectionCenter[0].appendChild(creatorBlock);
 
-    if (sectionCenter[0] == null) {
-        return false;
-    }
-
-    debugBlock.appendChild(setActionSocketTextInput);
-    debugBlock.appendChild(sendMessageToSocketTextInput);
-    debugBlock.appendChild(sendMessageToSocket);
-    sectionCenter[0].appendChild(debugBlock);
-
-    sendMessageToSocket.addEventListener("click", function (e) {
-        let textValue = sendMessageToSocketTextInput.value;
-        let actionValue = setActionSocketTextInput.value;
-        console.log("action: " + actionValue);
-        console.log("text: " + textValue);
-        socket.sendMessage(textValue, actionValue);
+    startGameButton.addEventListener("click", function (e) {
+        socket.startGame(5);
     });
+
+    let playerBlock = document.createElement("div");
+    playerBlock.className = "player-block";
+
+    let playerStartGameInfo = document.createElement("p");
+    playerStartGameInfo.innerHTML = "Waiting for creator to start the game";
+    
+    playerBlock.appendChild(playerStartGameInfo);
+    sectionCenter[0].appendChild(playerBlock);
 }
 
 window.onload = function pageonLoad() {
@@ -155,61 +148,48 @@ window.onload = function pageonLoad() {
 
     // Socket test
     let params = new URLSearchParams(location.search);
-    console.log(params.get('gameId'));
     let socket = new TriviaWebSocket(params.get('gameId'));
     socket.loadWebSocketEventlisteners();
 
     // Fetch API Test
     let gameApi = new GameAPI();
-    //console.log(gameApi.getRequest("https://trivia-bck.herokuapp.com/api/profile/"));
-    (async () => {
-        console.log(await gameApi.sendRequest("https://trivia-bck.herokuapp.com/api/profile/"));
-    })()
-
-    let startGameButton = document.getElementById("start-game-button");
-    startGameButton.addEventListener("click", function (e) {
-        socket.startGame(5);
+    gameApi.getLoggedUser()
+    .then(loggedUser => {
+        console.log(loggedUser);
     })
 
-    // Fake player data
-    let playersTestData = [];
-    playersTestData.push(
-        new Player("player one", 1, "connected", 0, 0, 0, 0),
-        new Player("player two", 2, "connected", 0, 0, 0, 0),
-        new Player("player three", 3, "waiting", 0, 0, 0, 0)
-    );
-
-    // Load initial data
-    createPlayerStatusList(playersTestData);
+    // Start Game Button
+    loadStartGame(socket);
+    
 
     // Create and load side panels buttons
     let asideLeftBlock = document.getElementsByClassName("aside-left");
     
-    let rateAnswersButton = document.createElement("button");
-    rateAnswersButton.innerHTML = "Rate Answers";
-    asideLeftBlock[0].appendChild(rateAnswersButton);
+    // Buttons for Debuging
+    let startGameButton = document.createElement("button");
+    startGameButton.innerHTML = "Start Game";
+    asideLeftBlock[0].appendChild(startGameButton);
 
     let askQuestionButton = document.createElement("button");
     askQuestionButton.innerHTML = "Ask Question";
     asideLeftBlock[0].appendChild(askQuestionButton);
 
-    let debugButton = document.createElement("button");
-    debugButton.innerHTML = "WebSocket Debug";
-    asideLeftBlock[0].appendChild(debugButton);
+    let rateAnswersButton = document.createElement("button");
+    rateAnswersButton.innerHTML = "Rate Answers";
+    asideLeftBlock[0].appendChild(rateAnswersButton);
+
+    startGameButton.addEventListener("click", function(e) {
+        cleanSectionCenterContent();
+        loadStartGame(socket);
+    }, false);
 
     rateAnswersButton.addEventListener("click", function (e) {
         cleanSectionCenterContent();
-        loadRecievedAnswers(playersTestData);
+        loadRecievedAnswers(socket.triviaGame.players);
     })
 
     askQuestionButton.addEventListener("click", function (e) {
         cleanSectionCenterContent();
-        askQuestion();
+        askQuestion(socket);
     })
-
-    debugButton.addEventListener("click", function (e) {
-        cleanSectionCenterContent();
-        debugActionButtons(socket);
-    })
-
 }

@@ -58,25 +58,20 @@ export class GameAPI {
             options.body = JSON.stringify(body);
         }
     
-        try {
-            const response = await fetch(url, options);
-            console.log(response.status);
+        const response = await fetch(url, options);
+        console.log(response.status);
 
-            if (response.status == 401) {
-                await this.refreshToken(access_token);
-                // .then(await this.sendRequest(url, method, body));
-                return "expired or invalid token";
-            }
-            else if (response.status == 500) {
-                return "internal server error";
-            }
-            
-            const result = await response.json();
-            return result;
+        if (response.status == 401) {
+            await this.refreshToken(access_token);
+            // .then(await this.sendRequest(url, method, body));
+            return "expired or invalid token";
         }
-        catch (e) {
-            console.error("Error:", e);
+        else if (response.status == 500) {
+            return "internal server error";
         }
+        
+        const result = await response.json();
+        return result;
     }
 
     async joinGameRequest(gameId) {
@@ -87,7 +82,7 @@ export class GameAPI {
     }
     
     async deleteGameRequest(gameId) {
-        await this.sendRequest(`https://trivia-bck.herokuapp.com/api/games/${gameId}/join_game/`, "DELETE");
+        await this.sendRequest(`https://trivia-bck.herokuapp.com/api/games/${gameId}/`, "DELETE");
     }
 
     async leaveGameRequest(gameId) {

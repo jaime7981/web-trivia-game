@@ -22,6 +22,9 @@ export function createPlayerStatusList(playerList) {
     if (asideRight[0] == null) {
         return false;
     }
+    else if (playerList.length == 0) {
+        return false;
+    }
 
     let headerName = document.createElement("h2");
     headerName.textContent = "Players";

@@ -1,7 +1,7 @@
-import { Player } from "./player.js";
+import { Player, createPlayerStatusList } from "./player.js";
 
 export class TriviaGame {
-    construsctor(gameId) {
+    constructor(gameId) {
         this.gameId = gameId;
         this.players = [];
         this.answers = [];
@@ -13,6 +13,7 @@ export class TriviaGame {
     playerJoined(userId, username) {
         let newPlayer = new Player(userId, username);
         this.players.push(newPlayer);
+        createPlayerStatusList(this.players);
     }
 
     playerUnjoined(userId, username) {
@@ -22,6 +23,7 @@ export class TriviaGame {
                 break;
             }
         }
+        createPlayerStatusList(this.players);
     }
 
     deletedGame(game) {
@@ -32,9 +34,10 @@ export class TriviaGame {
         this.rounds = rounds;
         
         for (let i = 0; i < players.length; i ++) {
-            let newPlayer = new Player(players[i].id, players[i].username);
+            let newPlayer = new Player(players[i].userid, players[i].username);
             this.players.push(newPlayer);
         }
+        createPlayerStatusList(this.players);
     }
 
     roundStarted(roundNumber, nosyId) {
