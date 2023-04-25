@@ -10,10 +10,11 @@ export class TriviaWebSocket {
         }
 
         if (gameId == null) {
-            this.socket = null;
             this.gameId = 0;
+            this.socket = null;
         }
         else {
+            this.gameId = gameId;
             this.socket = new WebSocket(`wss://trivia-bck.herokuapp.com/ws/trivia/${this.gameId}/?token=${this.token}`);
         }
 

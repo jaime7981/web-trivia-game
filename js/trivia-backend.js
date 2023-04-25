@@ -155,6 +155,7 @@ window.onload = function pageonLoad() {
 
     // Socket test
     let params = new URLSearchParams(location.search);
+    console.log(params.get('gameId'));
     let socket = new TriviaWebSocket(params.get('gameId'));
     socket.loadWebSocketEventlisteners();
 

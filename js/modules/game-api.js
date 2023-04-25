@@ -103,8 +103,8 @@ export class GameAPI {
         localStorage.setItem("user_id", player.id);
         let newPlayer = new Player(player.id,
                                    player.username,
-                                   player.games_created,
-                                   player.games_joined);
+                                   player.games_joined,
+                                   player.games_created);
         return newPlayer;
     }
 

@@ -1,7 +1,7 @@
 import { GameAPI as gameApiClass} from "./game-api.js";
 
 export class Game {
-    constructor(id, creator, created, player_count, name, question_time, answer_time, rounds_number, started, ended, players) {
+    constructor(id, creator, created, player_count, name, question_time, answer_time, rounds_number, started, ended, players = []) {
         this.id = id;
         this.creator = creator;
         this.created = created;
@@ -17,7 +17,10 @@ export class Game {
     }
 }
 
-Game.prototype.createGameNode = function() {
+Game.prototype.createGameNode = function(playerinGame = false) {
+    if (this.players === undefined) {
+        this.players = [];
+    }
     const gameNode = document.createElement('div');
     gameNode.className = "game-data";
 
@@ -75,7 +78,6 @@ Game.prototype.createGameNode = function() {
     const gameName = this.name;
     const gameCreatorID = this.creator.id;
     const userId = localStorage.getItem("user_id");
-    let playerinGame = false;
     let gameObject = this;
 
     for (const player of this.players) {
@@ -85,13 +87,6 @@ Game.prototype.createGameNode = function() {
     }
 
     if (this.started == null && gameCreatorID == userId) {
-        const startGameButtonNode = document.createElement('button');
-        startGameButtonNode.addEventListener("click", function (e) {
-            gameObject.gameApi.enterGame(gameId);
-        }, false);
-        startGameButtonNode.textContent = "ENTER GAME";
-        gameNode.appendChild(startGameButtonNode);
-
         const deleteGameButtonNode = document.createElement('button');
         deleteGameButtonNode.addEventListener("click", function (e) {
             gameObject.gameApi.deleteGameRequest(gameId);
@@ -107,6 +102,15 @@ Game.prototype.createGameNode = function() {
         });
         joinButtonNode.textContent = "JOIN GAME";
         gameNode.appendChild(joinButtonNode);
+    }
+    
+    if (playerinGame === true || gameCreatorID == userId) {
+        const startGameButtonNode = document.createElement('button');
+        startGameButtonNode.addEventListener("click", function (e) {
+            gameObject.gameApi.enterGame(gameId);
+        }, false);
+        startGameButtonNode.textContent = "ENTER GAME";
+        gameNode.appendChild(startGameButtonNode);
     }
 
     if (this.started == null && playerinGame == true && gameCreatorID != userId) {
