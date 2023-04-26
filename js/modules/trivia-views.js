@@ -30,8 +30,8 @@ export function loadStartGame(socket) {
     sectionCenter[0].appendChild(creatorBlock);
 
     startGameButton.addEventListener("click", function (e) {
-        socket.startGame(5);
-    });
+        this.startGame(setGameRounds.value);
+    }.bind(socket), false);
 
     // Player Wait
     // TODO: if statement for common players
@@ -75,11 +75,11 @@ export function askQuestion(socket) {
 
     questionButton.addEventListener("click", async function (e) {
         let question = questionInput.value;
-        await socket.sendQuestion(question);
+        await this.sendQuestion(question);
         let doneMessage = document.createElement("span");
         doneMessage.textContent = "Question sent\n";
         questionDiv.appendChild(doneMessage);
-    }, false);
+    }.bind(socket), false);
 
     // Player Wait
     // TODO: if statement for common players
@@ -122,7 +122,7 @@ export function sendAnswer(socket) {
 
     sendAnswerButton.addEventListener("click", async function (e) {
         let answer = setAnswer.value;
-        await socket.sendAnswer(answer);
+        await this.sendAnswer(answer);
         let doneMessage = document.createElement("span");
         doneMessage.textContent = "Answer Sent\n";
         answerBlock.appendChild(doneMessage);
@@ -135,7 +135,7 @@ export function sendAnswer(socket) {
         
         playerBlock.appendChild(playerStartGameInfo);
         sectionCenter[0].appendChild(playerBlock);
-    });
+    }.bind(socket), false);
 
     //TODO: Add player waiting for nosy review
 

@@ -59,11 +59,11 @@ export class TriviaGame {
         console.log("Se reinicia la ronda eligiendo otro preguntón (puede ser el mismo).");
     }
 
-    endSendAnswerTime() {
+    answerTimeEnded() {
         console.log("Se envía siempre a todos los jugadores, indica que comienza el tiempo para calificación.");
     }
 
-    endAssessTime() {
+    assessTimeEnded() {
         console.log("Se envía solo si aun faltan calificaciones por realizar (se envía a todos).");
     }
 }
