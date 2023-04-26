@@ -3,6 +3,8 @@ import { Player, createPlayerStatusList } from "./player.js";
 export class TriviaGame {
     constructor(gameId) {
         this.gameId = gameId;
+        this.nosyId = 0;
+        this.nosyPlayer = null;
         this.players = [];
         this.answers = [];
         this.rounds = 0;
@@ -12,6 +14,11 @@ export class TriviaGame {
 
     playerJoined(userId, username) {
         let newPlayer = new Player(userId, username);
+        for (let i = this.players.length - 1; i >= 0; i--) {
+            if (this.players[i].id == userId) {
+                return true;
+            }
+        }
         this.players.push(newPlayer);
         createPlayerStatusList(this.players);
     }
@@ -41,12 +48,20 @@ export class TriviaGame {
     }
 
     roundStarted(roundNumber, nosyId) {
-        console.log(roundNumber, nosyId);
         this.roundNumber = roundNumber;
+        this.nosyId = nosyId;
+        for (let i = this.players.length - 1; i >= 0; i--) {
+            if (this.players[i].id == nosyId) {
+                this.nosyPlayer = this.players[i];
+                this.player[i].isNosy = true;
+            }
+            else {
+                this.player[i].isNosy = false;
+            }
+        }
     }
 
     recieveQuestion(question) {
-        console.log(question);
         this.question = question;
     }
 
@@ -59,11 +74,11 @@ export class TriviaGame {
         console.log("Se reinicia la ronda eligiendo otro preguntón (puede ser el mismo).");
     }
 
-    endSendAnswerTime() {
+    answerTimeEnded() {
         console.log("Se envía siempre a todos los jugadores, indica que comienza el tiempo para calificación.");
     }
 
-    endAssessTime() {
+    assessTimeEnded() {
         console.log("Se envía solo si aun faltan calificaciones por realizar (se envía a todos).");
     }
 }

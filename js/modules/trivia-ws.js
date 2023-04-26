@@ -1,4 +1,5 @@
 import { TriviaGame } from "./trivia-game.js";
+import * as triviaViews from "./trivia-views.js";
 
 export class TriviaWebSocket {
     constructor(gameId, accessToken = null) {
@@ -71,19 +72,16 @@ export class TriviaWebSocket {
                 break;
             case 'game_started':
                 this.triviaGame.gameStarted(jsonResponse.rounds, jsonResponse.players);
-                // TODO: load game Start View
                 break;
             case 'round_started':
                 this.triviaGame.roundStarted(jsonResponse.round_number, jsonResponse.noisy_id);
-                // TODO: load nosy send question
-                // TODO: load player wait question
+                triviaViews.askQuestion(this);
 
-                // TODO: add recieve quetion clocks
+                // TODO: add recieve question clocks
                 break;
             case 'round_question':
                 this.triviaGame.recieveQuestion(jsonResponse.question);
-                // TODO: load nosy send answer and other functionalities
-                // TODO: load player send answer and wait review
+                triviaViews.sendAnswer(this);
 
                 // TODO: add send answer clocks
                 break;
@@ -92,7 +90,11 @@ export class TriviaWebSocket {
                 break;
             case 'question_time_ended':
                 this.triviaGame.questionTimeEnded();
-                // TODO: load send answer view
+                triviaViews.sendAnswer(this);
+                break;
+            case 'answer_time_ended':
+                this.triviaGame.answerTimeEnded();
+                // TODO: load review answer view
                 break;
             default:
                 console.log(`Type '${responseType}' not handeled`);
