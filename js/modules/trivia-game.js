@@ -53,10 +53,10 @@ export class TriviaGame {
         for (let i = this.players.length - 1; i >= 0; i--) {
             if (this.players[i].id == nosyId) {
                 this.nosyPlayer = this.players[i];
-                this.player[i].isNosy = true;
+                this.players[i].isNosy = true;
             }
             else {
-                this.player[i].isNosy = false;
+                this.players[i].isNosy = false;
             }
         }
     }
