@@ -19,6 +19,10 @@ export class Player {
 export function createPlayerStatusList(playerList) {
     let asideRight = document.getElementsByClassName("aside-right");
 
+    while (asideRight[0].firstChild) {
+        asideRight[0].removeChild(asideRight[0].firstChild);
+    }
+
     if (asideRight[0] == null) {
         return false;
     }
