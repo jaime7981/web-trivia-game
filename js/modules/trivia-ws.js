@@ -1,4 +1,5 @@
 import { TriviaGame } from "./trivia-game.js";
+import * as triviaViews from "./trivia-views.js";
 
 export class TriviaWebSocket {
     constructor(gameId, accessToken = null) {
@@ -75,7 +76,7 @@ export class TriviaWebSocket {
                 break;
             case 'round_started':
                 this.triviaGame.roundStarted(jsonResponse.round_number, jsonResponse.noisy_id);
-                // this.triviaViews.askQuestion();
+                triviaViews.askQuestion(this.socket);
 
                 // TODO: add recieve question clocks
                 break;
@@ -92,7 +93,7 @@ export class TriviaWebSocket {
             case 'question_time_ended':
                 this.triviaGame.questionTimeEnded();
                 // TODO: load send answer view
-                // this.triviaViews.sendAnswer();
+                triviaViews.sendAnswer(this.socket);
                 break;
             default:
                 console.log(`Type '${responseType}' not handeled`);
