@@ -8,9 +8,9 @@ export class Player {
         this.gamesCreated = gamesCreated;
 
         // Default Values
-        this.status = "offline";
+        this.status = "online";
         this.playerScore = 0;
-        this.playerPregunton = false;
+        this.isNosy = false;
         this.playerFaults = 0;
         this.playerKO = true;
     }
@@ -65,7 +65,7 @@ export function createPlayerStatusList(playerList) {
         playerContent.appendChild(document.createTextNode(" | "));
 
         let playerPregunton = document.createElement("span");
-        playerPregunton.textContent = player.playerPregunton;
+        playerPregunton.textContent = player.isNosy;
         playerContent.appendChild(playerPregunton);
         playerContent.appendChild(document.createTextNode(" | "));
 

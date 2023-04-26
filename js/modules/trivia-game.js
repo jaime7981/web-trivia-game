@@ -4,6 +4,7 @@ export class TriviaGame {
     constructor(gameId) {
         this.gameId = gameId;
         this.nosyId = 0;
+        this.nosyPlayer = null;
         this.players = [];
         this.answers = [];
         this.rounds = 0;
@@ -49,6 +50,15 @@ export class TriviaGame {
     roundStarted(roundNumber, nosyId) {
         this.roundNumber = roundNumber;
         this.nosyId = nosyId;
+        for (let i = this.players.length - 1; i >= 0; i--) {
+            if (this.players[i].id == nosyId) {
+                this.nosyPlayer = this.players[i];
+                this.player[i].isNosy = true;
+            }
+            else {
+                this.player[i].isNosy = false;
+            }
+        }
     }
 
     recieveQuestion(question) {
