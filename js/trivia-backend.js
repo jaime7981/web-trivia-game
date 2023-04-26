@@ -14,8 +14,17 @@ window.onload = function pageonLoad() {
     let gameApi = new GameAPI();
     gameApi.getLoggedUser()
     .then(loggedUser => {
-        console.log(loggedUser);
+        socket.loggedUser = loggedUser;
     })
+    gameApi.getAllGames()
+    .then(allGames => {
+        for (let i = 0; i < allGames.length; i ++) {
+            if (allGames[i].id == params.get('gameId')) {
+                socket.game = allGames[i];
+                break;
+            }
+        }
+    });
 
     // Start Game Button
     triviaViews.loadStartGame(socket);

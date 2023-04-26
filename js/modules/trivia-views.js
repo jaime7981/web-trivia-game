@@ -13,7 +13,7 @@ export function loadStartGame(socket) {
     let headerName = document.createElement("h2");
     headerName.textContent = "Start Game";
     sectionCenter[0].appendChild(headerName);
-
+    
     // Creator Question
     let creatorBlock = document.createElement("div");
     creatorBlock.className = "creator-block";
