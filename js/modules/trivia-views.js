@@ -59,6 +59,24 @@ export function askQuestion(socket) {
     headerName.textContent = "Send Question";
     sectionCenter[0].appendChild(headerName);
 
+    // Create a div for the timer
+    let timerDiv = document.createElement('div');
+    sectionCenter[0].appendChild(timerDiv);
+
+    let timeLeft = 59; // question_time -1
+
+    function updateTimer() {
+        timerDiv.innerHTML = 'Time left: ' + timeLeft + ' seconds';
+        if (timeLeft === 0) {
+            clearInterval(interval);
+            timerDiv.innerHTML = 'Time out';
+        } else {
+            timeLeft--;
+        }
+    }
+
+    const interval = setInterval(updateTimer, 1000);
+
     let questionDiv = document.createElement("div");
     questionDiv.className = "question-div";
 
@@ -101,6 +119,25 @@ export function sendAnswer(socket) {
     let headerName = document.createElement("h2");
     headerName.textContent = "Send Answer";
     sectionCenter[0].appendChild(headerName);
+
+    // Create a div for the timer
+    let timerDiv = document.createElement('div');
+    sectionCenter[0].appendChild(timerDiv);
+
+    let timeLeft = 59; // answer_time -1
+
+    function updateTimer() {
+        timerDiv.innerHTML = 'Time left: ' + timeLeft + ' seconds';
+        if (timeLeft === 0) {
+            clearInterval(interval);
+            timerDiv.innerHTML = 'Time out';
+        } else {
+            timeLeft--;
+        }
+    }
+
+    const interval = setInterval(updateTimer, 1000);
+
 
     let answerBlock = document.createElement("div");
     answerBlock.className = "answer-block";
