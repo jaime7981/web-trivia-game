@@ -12,6 +12,15 @@ export class TriviaGame {
         this.question = "";
     }
 
+    isPlayerJoined(player) {
+        for (let playerPosition = 0; player < this.players.length; player++) {
+            if (this.players[playerPosition].id == player.id) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     playerJoined(userId, username) {
         let newPlayer = new Player(userId, username);
         for (let i = this.players.length - 1; i >= 0; i--) {
@@ -39,6 +48,7 @@ export class TriviaGame {
     
     gameStarted(rounds, players) {
         this.rounds = rounds;
+        this.players = [];
         
         for (let i = 0; i < players.length; i ++) {
             let newPlayer = new Player(players[i].userid, players[i].username);
@@ -59,6 +69,7 @@ export class TriviaGame {
                 this.players[i].isNosy = false;
             }
         }
+        createPlayerStatusList(this.players);
     }
 
     recieveQuestion(question) {

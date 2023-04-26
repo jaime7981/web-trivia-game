@@ -45,7 +45,7 @@ export function createPlayerStatusList(playerList) {
         let playerContent = document.createElement("div");
 
         let playerName = document.createElement("span");
-        playerName.textContent = player.name;
+        playerName.textContent = player.username;
         playerContent.appendChild(playerName);
         playerContent.appendChild(document.createTextNode(" | "));
 

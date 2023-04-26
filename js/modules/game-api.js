@@ -109,7 +109,11 @@ export class GameAPI {
             "question_time" : questionTime,
             "answer_time" : answerTime
         };
-        await this.sendRequest("https://trivia-bck.herokuapp.com/api/games/", "POST", gameData);
+        await this.sendRequest("https://trivia-bck.herokuapp.com/api/games/", "POST", gameData)
+        .then(createGameRequest => {
+            console.log(createGameRequest);
+            this.enterGame(createGameRequest.id);
+        });
     }
 
     async getAllGames() {
