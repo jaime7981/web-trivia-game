@@ -3,6 +3,7 @@ import { Player, createPlayerStatusList } from "./player.js";
 export class TriviaGame {
     constructor(gameId) {
         this.gameId = gameId;
+        this.nosyId = 0;
         this.players = [];
         this.answers = [];
         this.rounds = 0;
@@ -12,6 +13,11 @@ export class TriviaGame {
 
     playerJoined(userId, username) {
         let newPlayer = new Player(userId, username);
+        for (let i = this.players.length - 1; i >= 0; i--) {
+            if (this.players[i].id == userId) {
+                return true;
+            }
+        }
         this.players.push(newPlayer);
         createPlayerStatusList(this.players);
     }
@@ -41,12 +47,11 @@ export class TriviaGame {
     }
 
     roundStarted(roundNumber, nosyId) {
-        console.log(roundNumber, nosyId);
         this.roundNumber = roundNumber;
+        this.nosyId = nosyId;
     }
 
     recieveQuestion(question) {
-        console.log(question);
         this.question = question;
     }
 

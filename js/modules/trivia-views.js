@@ -137,9 +137,6 @@ export function sendAnswer(socket) {
         sectionCenter[0].appendChild(playerBlock);
     }.bind(socket), false);
 
-    //TODO: Add player waiting for nosy review
-
-
     // Nosy Functionalities
     // TODO: recieve Answers, review Answers
 }
