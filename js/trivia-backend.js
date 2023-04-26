@@ -1,5 +1,3 @@
-import { Game } from "./modules/game.js";
-import { Player, createPlayerStatusList } from "./modules/player.js";
 import { TriviaWebSocket } from "./modules/trivia-ws.js";
 import { GameAPI } from "./modules/game-api.js";
 
@@ -57,6 +55,7 @@ function askQuestion(socket) {
     }
 
     // Creator Send Question
+    // TODO: if statement for nosy player
     let headerName = document.createElement("h2");
     headerName.textContent = "Send Question";
     sectionCenter[0].appendChild(headerName);
@@ -84,7 +83,15 @@ function askQuestion(socket) {
     }, false);
 
     // Player Wait
-    // TODO: Add Player Wait Message
+    // TODO: if statement for common players
+    let playerBlock = document.createElement("div");
+    playerBlock.className = "player-block";
+
+    let playerStartGameInfo = document.createElement("p");
+    playerStartGameInfo.innerHTML = "Waiting for nosy to send the question";
+    
+    playerBlock.appendChild(playerStartGameInfo);
+    sectionCenter[0].appendChild(playerBlock);
     return true
 }
 
@@ -119,9 +126,19 @@ function sendAnswer(socket) {
         let doneMessage = document.createElement("span");
         doneMessage.textContent = "Answer Sent\n";
         answerBlock.appendChild(doneMessage);
+
+        let playerBlock = document.createElement("div");
+        playerBlock.className = "player-block";
+
+        let playerStartGameInfo = document.createElement("p");
+        playerStartGameInfo.innerHTML = "Waiting for nosy to review the answers";
+        
+        playerBlock.appendChild(playerStartGameInfo);
+        sectionCenter[0].appendChild(playerBlock);
     });
 
     //TODO: Add player waiting for nosy review
+
 
     // Nosy Functionalities
     // TODO: recieve Answers, review Answers

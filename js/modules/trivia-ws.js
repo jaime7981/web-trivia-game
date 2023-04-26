@@ -75,10 +75,9 @@ export class TriviaWebSocket {
                 break;
             case 'round_started':
                 this.triviaGame.roundStarted(jsonResponse.round_number, jsonResponse.noisy_id);
-                // TODO: load nosy send question
-                // TODO: load player wait question
+                // this.triviaViews.askQuestion();
 
-                // TODO: add recieve quetion clocks
+                // TODO: add recieve question clocks
                 break;
             case 'round_question':
                 this.triviaGame.recieveQuestion(jsonResponse.question);
@@ -93,6 +92,7 @@ export class TriviaWebSocket {
             case 'question_time_ended':
                 this.triviaGame.questionTimeEnded();
                 // TODO: load send answer view
+                // this.triviaViews.sendAnswer();
                 break;
             default:
                 console.log(`Type '${responseType}' not handeled`);
