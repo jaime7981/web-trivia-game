@@ -13,7 +13,7 @@ export function loadStartGame(socket) {
     let headerName = document.createElement("h2");
     headerName.textContent = "Start Game";
     sectionCenter[0].appendChild(headerName);
-    
+
     // Creator Question
     let creatorBlock = document.createElement("div");
     creatorBlock.className = "creator-block";
@@ -25,24 +25,34 @@ export function loadStartGame(socket) {
     let startGameButton = document.createElement("button");
     startGameButton.innerHTML = "Start Game";
 
-    creatorBlock.appendChild(setGameRounds);
-    creatorBlock.appendChild(startGameButton);
-    sectionCenter[0].appendChild(creatorBlock);
+    if (socket.game == null) {
+        let playerBlock = document.createElement("div");
+        playerBlock.className = "player-block";
 
-    startGameButton.addEventListener("click", function (e) {
-        this.startGame(setGameRounds.value);
-    }.bind(socket), false);
+        let playerStartGameInfo = document.createElement("p");
+        playerStartGameInfo.innerHTML = "Game already started or you got disconnected\nNext round could refresh your state";
+        
+        playerBlock.appendChild(playerStartGameInfo);
+        sectionCenter[0].appendChild(playerBlock);
+    }
+    else if (socket.loggedUser.id == socket.game.creator.id) {
+        creatorBlock.appendChild(setGameRounds);
+        creatorBlock.appendChild(startGameButton);
+        sectionCenter[0].appendChild(creatorBlock);
+        startGameButton.addEventListener("click", function (e) {
+            this.startGame(setGameRounds.value);
+        }.bind(socket), false);
+    }
+    else {
+        let playerBlock = document.createElement("div");
+        playerBlock.className = "player-block";
 
-    // Player Wait
-    // TODO: if statement for common players
-    let playerBlock = document.createElement("div");
-    playerBlock.className = "player-block";
-
-    let playerStartGameInfo = document.createElement("p");
-    playerStartGameInfo.innerHTML = "Waiting for creator to start the game";
-    
-    playerBlock.appendChild(playerStartGameInfo);
-    sectionCenter[0].appendChild(playerBlock);
+        let playerStartGameInfo = document.createElement("p");
+        playerStartGameInfo.innerHTML = "Waiting for creator to start the game";
+        
+        playerBlock.appendChild(playerStartGameInfo);
+        sectionCenter[0].appendChild(playerBlock);
+    }
 }
 
 export function askQuestion(socket) {
@@ -83,32 +93,36 @@ export function askQuestion(socket) {
     let questionInput = document.createElement("input");
     questionInput.type = "text";
     questionInput.placeholder = "Question";
-    questionDiv.appendChild(questionInput);
 
     let questionButton = document.createElement("button");
     questionButton.innerHTML = "Send Question";
-    questionDiv.appendChild(questionButton);
-
-    sectionCenter[0].appendChild(questionDiv);
-
-    questionButton.addEventListener("click", async function (e) {
-        let question = questionInput.value;
-        await this.sendQuestion(question);
-        let doneMessage = document.createElement("span");
-        doneMessage.textContent = "Question sent\n";
-        questionDiv.appendChild(doneMessage);
-    }.bind(socket), false);
 
     // Player Wait
-    // TODO: if statement for common players
     let playerBlock = document.createElement("div");
     playerBlock.className = "player-block";
 
     let playerStartGameInfo = document.createElement("p");
     playerStartGameInfo.innerHTML = "Waiting for nosy to send the question";
-    
-    playerBlock.appendChild(playerStartGameInfo);
-    sectionCenter[0].appendChild(playerBlock);
+
+    // nosy or player statement
+    console.log(socket.loggedUser);
+    console.log(socket.triviaGame);
+    if (socket.triviaGame.nosyId == socket.loggedUser.id) {
+        questionDiv.appendChild(questionInput);
+        questionDiv.appendChild(questionButton);
+        sectionCenter[0].appendChild(questionDiv);
+        questionButton.addEventListener("click", async function (e) {
+            let question = questionInput.value;
+            await this.sendQuestion(question);
+            let doneMessage = document.createElement("span");
+            doneMessage.textContent = "Question sent\n";
+            questionDiv.appendChild(doneMessage);
+        }.bind(socket), false);
+    }
+    else {
+        playerBlock.appendChild(playerStartGameInfo);
+        sectionCenter[0].appendChild(playerBlock);
+    }    
     return true
 }
 
