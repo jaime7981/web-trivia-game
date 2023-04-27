@@ -4,7 +4,7 @@ export class Game {
     constructor(id, creator, created, player_count, name, question_time, answer_time, rounds_number, started, ended, players = []) {
         this.id = id;
         this.creator = creator;
-        this.created = created;
+        this.created = new Date(created).toLocaleDateString();
         this.player_count = player_count;
         this.name = name;
         this.question_time = question_time;
@@ -49,7 +49,7 @@ Game.prototype.createGameNode = function(playerinGame = false) {
     gameNode.appendChild(playersNode);
     for (const player of this.players) {
       const playerNode = document.createElement('p');
-      playerNode.textContent = `${player.username} (${player.id})`;
+      playerNode.textContent = `${player.username}`;  // (${player.id})`;
       playersNode.appendChild(playerNode);
     }
   
@@ -59,7 +59,7 @@ Game.prototype.createGameNode = function(playerinGame = false) {
   
     const creatorNode = document.createElement('span');
     // this.creator is a dict with keys id and username
-    creatorNode.textContent = `Creator: ${this.creator.username} (${this.creator.id})`;
+    creatorNode.textContent = `Creator: ${this.creator.username}`;  // (${this.creator.id})`;
     gameNode.appendChild(creatorNode);
   
     const createdNode = document.createElement('span');
