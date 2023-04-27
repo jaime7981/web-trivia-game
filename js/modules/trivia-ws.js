@@ -2,7 +2,7 @@ import { TriviaGame } from "./trivia-game.js";
 import * as triviaViews from "./trivia-views.js";
 
 export class TriviaWebSocket {
-    constructor(gameId, accessToken = null) {
+    constructor(gameId, loggedUser = null, game = null, accessToken = null) {
         if (accessToken == null) {
             this.token = localStorage.getItem("access_token");        
         }
@@ -18,6 +18,9 @@ export class TriviaWebSocket {
             this.gameId = gameId;
             this.socket = new WebSocket(`wss://trivia-bck.herokuapp.com/ws/trivia/${this.gameId}/?token=${this.token}`);
         }
+
+        this.loggedUser = loggedUser;
+        this.game = game;
 
         this.triviaGame = new TriviaGame(this.gameId);
     }
@@ -74,16 +77,12 @@ export class TriviaWebSocket {
                 this.triviaGame.gameStarted(jsonResponse.rounds, jsonResponse.players);
                 break;
             case 'round_started':
-                this.triviaGame.roundStarted(jsonResponse.round_number, jsonResponse.noisy_id);
+                this.triviaGame.roundStarted(jsonResponse.round_number, jsonResponse.nosy_id);
                 triviaViews.askQuestion(this);
-
-                // TODO: add recieve question clocks
                 break;
             case 'round_question':
                 this.triviaGame.recieveQuestion(jsonResponse.question);
                 triviaViews.sendAnswer(this);
-
-                // TODO: add send answer clocks
                 break;
             case 'round_answer':
                 this.triviaGame.recieveAnswers(jsonResponse.answer, jsonResponse.userid);
