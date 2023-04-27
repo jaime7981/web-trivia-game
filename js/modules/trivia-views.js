@@ -105,8 +105,6 @@ export function askQuestion(socket) {
     playerStartGameInfo.innerHTML = "Waiting for nosy to send the question";
 
     // nosy or player statement
-    console.log(socket.loggedUser);
-    console.log(socket.triviaGame);
     if (socket.triviaGame.nosyId == socket.loggedUser.id) {
         questionDiv.appendChild(questionInput);
         questionDiv.appendChild(questionButton);
