@@ -1,0 +1,92 @@
+
+.players-status-aside {
+    background-color: #0077FF;
+    color: white;
+
+    border-radius: 0.5rem;
+    border-style: solid;
+    border-color: black;
+    border-width: 0.1rem;
+}
+
+.player-status-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    height: min-content;
+}
+
+.player-content-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    height: min-content;
+}
+
+.player-status-header p {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 60px;
+    height: 30px;
+    margin: 0px;
+    
+    border-style: solid;
+    border-color: black;
+    border-width: 0.1rem;
+}
+
+.player-content-row p {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    width: 60px;
+    height: 30px;
+    margin: 0px;
+
+    border-style: solid;
+    border-color: black;
+    border-width: 0.1rem;
+}
+
+.review-answers-block {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    background-color: #0077FF;
+
+    margin: 2px;
+    padding: 2px;
+    height: min-content;
+    width: max-content;
+    border-radius: 0.5rem;
+}
+
+.review-answers-block p {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin: 0px;
+    padding: 0.5rem 1rem;
+}
+
+.review-answers-block select {
+    margin: 0rem 1rem;
+}
+
+.review-answers-block button {
+    margin: 0px;
+}
+
+.timer-block {
+    color: white;
+}
