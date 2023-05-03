@@ -12,6 +12,15 @@ export class TriviaGame {
         this.question = "";
     }
 
+    getPlayerById(playerId) {
+        for (let i = 0; i < this.players.length; i++) {
+            if (this.players[i].id == playerId) {
+                return this.players[i];
+            }
+        }
+        return false;
+    }
+
     isPlayerJoined(player) {
         for (let playerPosition = 0; player < this.players.length; player++) {
             if (this.players[playerPosition].id == player.id) {

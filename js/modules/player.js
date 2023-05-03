@@ -34,49 +34,63 @@ export function createPlayerStatusList(playerList) {
     headerName.textContent = "Players";
     asideRight[0].appendChild(headerName);
 
-    let headerNames = document.createElement("h5");
-    headerNames.textContent = "Name | ID | Status | Score | Asker | Faults | KO";
-    asideRight[0].appendChild(headerNames);
-
     let gameStatusList = document.createElement("div");
     gameStatusList.className = "players-status-aside";
 
+    // Table Header Names
+    let header_list = ['ID', 'Name', 'Nosy', 'Status', 'Score'];
+    let headerNames = document.createElement("div");
+    headerNames.className = 'player-status-header'
+    for (let i = 0; i < header_list.length; i++) {
+        let header_name_col = document.createElement('p');
+        header_name_col.innerHTML = header_list[i];
+        headerNames.appendChild(header_name_col);
+    }
+
+    gameStatusList.appendChild(headerNames);
+
     playerList.forEach(player => {
         let playerContent = document.createElement("div");
+        playerContent.className = 'player-content-row';
 
-        let playerName = document.createElement("span");
-        playerName.textContent = player.username;
-        playerContent.appendChild(playerName);
-        playerContent.appendChild(document.createTextNode(" | "));
-
-        let playerId = document.createElement("span");
+        // Player ID
+        let playerId = document.createElement("p");
         playerId.textContent = player.id;
         playerContent.appendChild(playerId);
-        playerContent.appendChild(document.createTextNode(" | "));
 
-        let playerStatus = document.createElement("span");
-        playerStatus.textContent = player.status;
-        playerContent.appendChild(playerStatus);
-        playerContent.appendChild(document.createTextNode(" | "));
+        // Player Name
+        let playerName = document.createElement("p");
+        playerName.textContent = player.username;
+        playerContent.appendChild(playerName);
 
-        let playerScore = document.createElement("span");
-        playerScore.textContent = player.playerScore;
-        playerContent.appendChild(playerScore);
-        playerContent.appendChild(document.createTextNode(" | "));
-
-        let playerPregunton = document.createElement("span");
+        // Player is Nosy
+        let playerPregunton = document.createElement("p");
         playerPregunton.textContent = player.isNosy;
         playerContent.appendChild(playerPregunton);
-        playerContent.appendChild(document.createTextNode(" | "));
 
-        let playerFaults = document.createElement("span");
+        // Player Status
+        let playerStatus = document.createElement("p");
+        playerStatus.textContent = player.status;
+        playerContent.appendChild(playerStatus);
+
+        // Player Score
+        let playerScore = document.createElement("p");
+        playerScore.textContent = player.playerScore;
+        playerContent.appendChild(playerScore);
+
+        // Player Fauls?
+        /*
+        let playerFaults = document.createElement("p");
         playerFaults.textContent = player.playerFaults;
         playerContent.appendChild(playerFaults);
-        playerContent.appendChild(document.createTextNode(" | "));
+        */
 
-        let playerKO = document.createElement("span");
+        // Player KO?
+        /*
+        let playerKO = document.createElement("p");
         playerKO.textContent = player.playerKO;
         playerContent.appendChild(playerKO);
+        */
 
         gameStatusList.appendChild(playerContent);
     });

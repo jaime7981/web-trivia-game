@@ -86,6 +86,8 @@ export class TriviaWebSocket {
                 break;
             case 'round_answer':
                 this.triviaGame.recieveAnswers(jsonResponse.answer, jsonResponse.userid);
+                let player = this.triviaGame.getPlayerById(jsonResponse.userid);
+                triviaViews.LoadRecivedAnswer(this, player, jsonResponse.answer);
                 break;
             case 'question_time_ended':
                 this.triviaGame.questionTimeEnded();

@@ -1,3 +1,5 @@
+import { Player, createPlayerStatusList } from "./player.js";
+
 export function cleanSectionCenterContent() {
     let sectionCenter = document.getElementsByClassName("section-center");
 
@@ -71,6 +73,7 @@ export function askQuestion(socket) {
 
     // Create a div for the timer
     let timerDiv = document.createElement('div');
+    timerDiv.className = 'timer-block';
     sectionCenter[0].appendChild(timerDiv);
 
     let timeLeft = 59; // question_time -1
@@ -134,6 +137,7 @@ export function sendAnswer(socket) {
 
     // Create a div for the timer
     let timerDiv = document.createElement('div');
+    timerDiv.className = 'timer-block';
     sectionCenter[0].appendChild(timerDiv);
 
     let timeLeft = 59; // answer_time -1
@@ -185,66 +189,49 @@ export function sendAnswer(socket) {
         playerBlock.appendChild(playerStartGameInfo);
         sectionCenter[0].appendChild(playerBlock);
     }.bind(socket), false);
-
-    // Nosy Functionalities
-    // TODO: recieve Answers, review Answers
 }
 
-export function loadRecievedAnswers(playerList) {
-    cleanSectionCenterContent();
+// Load one answer
+export function LoadRecivedAnswer(socket, player, answer) {
+    // cleanSectionCenterContent();
     let sectionCenter = document.getElementsByClassName("section-center");
 
-    if (sectionCenter[0] == null) {
-        return false;
-    }
-
-    let headerName = document.createElement("h2");
-    headerName.textContent = "Answers Points";
-    sectionCenter[0].appendChild(headerName);
-
     let answersEvaluation = document.createElement("div");
+    answersEvaluation.className = 'review-answers-block';
 
-    playerList.forEach(player => {
-        let playerAnswersContent = document.createElement("div");
+    // Player info
+    let playerName = document.createElement("p");
+    playerName.textContent = player.username;
+    answersEvaluation.appendChild(playerName);
+    
+    let playerAnswer = document.createElement("p");
+    playerAnswer.textContent = answer;
+    answersEvaluation.appendChild(playerAnswer);
 
-        let playerName = document.createElement("span");
-        playerName.textContent = player.name;
-        playerAnswersContent.appendChild(playerName);
-        playerAnswersContent.appendChild(document.createTextNode(" | "));
-        
-        let playerAnswer = document.createElement("span");
-        playerAnswer.textContent = "playerTestAnswer";
-        playerAnswersContent.appendChild(playerAnswer);
-        playerAnswersContent.appendChild(document.createTextNode(" | "));
+    // Answers Evaluation
+    let answerPoints = document.createElement("select");
+    let answerPointsGood = document.createElement("option");
+    let answerPointsMedium = document.createElement("option");
+    let answerPointsBad = document.createElement("option");
 
-        // Answers Evaluation
-        let answerPoints = document.createElement("select");
-        let answerPointsGood = document.createElement("option");
-        let answerPointsMedium = document.createElement("option");
-        let answerPointsBad = document.createElement("option");
+    answerPointsGood.value = 2;
+    answerPointsMedium.value = 1;
+    answerPointsBad.value = 0;
 
-        answerPointsGood.value = 2;
-        answerPointsMedium.value = 1;
-        answerPointsBad.value = 0;
+    answerPointsGood.innerHTML = "good";
+    answerPointsMedium.innerHTML = "medium";
+    answerPointsBad.innerHTML = "bad";
 
-        answerPointsGood.innerHTML = "good";
-        answerPointsMedium.innerHTML = "medium";
-        answerPointsBad.innerHTML = "bad";
-
-        answerPoints.appendChild(answerPointsGood);
-        answerPoints.appendChild(answerPointsMedium);
-        answerPoints.appendChild(answerPointsBad);
-        
-        playerAnswersContent.appendChild(answerPoints);
-
-        answersEvaluation.appendChild(playerAnswersContent);
-    });
-    sectionCenter[0].appendChild(answersEvaluation);
+    answerPoints.appendChild(answerPointsGood);
+    answerPoints.appendChild(answerPointsMedium);
+    answerPoints.appendChild(answerPointsBad);
+    answersEvaluation.appendChild(answerPoints);
 
     let rateAnswersButton = document.createElement("button");
-    rateAnswersButton.innerHTML = "Send Ratings";
-    sectionCenter[0].appendChild(rateAnswersButton);
+    rateAnswersButton.innerHTML = "Send Rating";
+    answersEvaluation.appendChild(rateAnswersButton);
 
+    sectionCenter[0].appendChild(answersEvaluation);
     return true;
 }
 
@@ -267,6 +254,10 @@ export function loadAsideDebugButtons(socket) {
     rateAnswersButton.innerHTML = "Rate Answers";
     asideLeftBlock[0].appendChild(rateAnswersButton);
 
+    let playerListButton = document.createElement("button");
+    playerListButton.innerHTML = "Players List";
+    asideLeftBlock[0].appendChild(playerListButton);
+
     startGameButton.addEventListener("click", function(e) {
         cleanSectionCenterContent();
         loadStartGame(socket);
@@ -283,7 +274,12 @@ export function loadAsideDebugButtons(socket) {
     })
 
     rateAnswersButton.addEventListener("click", function (e) {
-        cleanSectionCenterContent();
-        loadRecievedAnswers(socket.triviaGame.players);
+        let players = [new Player(1, 'jaime'), new Player(2, 'jullian'), new Player(3, 'pedro')];
+        LoadRecivedAnswer(null, players[0], 'answer');
+    })
+
+    playerListButton.addEventListener("click", function (e) {
+        let players = [new Player(1, 'jaime'), new Player(2, 'jullian'), new Player(3, 'pedro')];
+        createPlayerStatusList(players);
     })
 }
