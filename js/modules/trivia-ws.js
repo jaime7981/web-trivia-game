@@ -89,6 +89,15 @@ export class TriviaWebSocket {
                 let player = this.triviaGame.getPlayerById(jsonResponse.userid);
                 triviaViews.LoadRecivedAnswer(this, player, jsonResponse.answer);
                 break;
+            case 'round_result':
+                let game_scores = jsonResponse.game_scores;
+                let round_results = jsonResponse.round_results;
+                this.triviaGame.roundResult(game_scores, round_results);
+                break;
+            case 'round_review_answer':
+                this.triviaGame.recieveAnswers(jsonResponse.correct_answer, jsonResponse.graded_answer, jsonResponse.grade);
+                triviaViews.LoadRecivedReview(this, jsonResponse.correct_answer, jsonResponse.graded_answer, jsonResponse.grade);
+                break;
             case 'question_time_ended':
                 this.triviaGame.questionTimeEnded();
                 triviaViews.sendAnswer(this);
@@ -149,7 +158,7 @@ export class TriviaWebSocket {
         this.socket.send(JSON.stringify(socketJsonMessage));
     }
 
-    sendEvaluation(correctness  = false) {
+    sendEvaluation(correctness = false) {
         if (this.socket == null) {
             return null;
         }

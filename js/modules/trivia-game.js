@@ -90,6 +90,27 @@ export class TriviaGame {
         this.answers.push(userAnswer);
     }
 
+    recieveReview(correct_answer, graded_answer, grade) {
+        // console.log(correct_answer, graded_answer, grade);
+    }
+
+    roundResult(game_scores, round_results) {
+        /*
+        {game_scores:{15: 2, 196: 0, 198: -2},
+         round_results: {15: 2, 196: 0, 198: -2},
+         type: "round_result"}
+        */
+        Object.entries(game_scores).forEach(([k,v]) => {
+            for (let i = 0; i < this.players.length; i++) {
+                if (this.players[i].id.toString() === k.toString()) {
+                    this.players[i].playerScore = v;
+                    break;
+                }
+            }
+        });
+        createPlayerStatusList(this.players);
+    }
+
     questionTimeEnded() {
         console.log("Se reinicia la ronda eligiendo otro preguntón (puede ser el mismo).");
     }

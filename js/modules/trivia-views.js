@@ -229,7 +229,70 @@ export function LoadRecivedAnswer(socket, player, answer) {
 
     let rateAnswersButton = document.createElement("button");
     rateAnswersButton.innerHTML = "Send Rating";
+
+    rateAnswersButton.addEventListener("click", function (e) {
+        let qualification_value = answerPoints.value;
+        this.sendQualification(player.id, qualification_value);
+    }.bind(socket), false);
+
     answersEvaluation.appendChild(rateAnswersButton);
+
+    sectionCenter[0].appendChild(answersEvaluation);
+    return true;
+}
+
+// Load review
+export function LoadRecivedReview(socket, correctAnswer, gradedAnswer, grade) {
+    cleanSectionCenterContent();
+    let sectionCenter = document.getElementsByClassName("section-center");
+
+    // Section Title
+    let headerName = document.createElement("h2");
+    headerName.textContent = "Review Answer";
+    sectionCenter[0].appendChild(headerName);
+
+    let answersEvaluation = document.createElement("div");
+    answersEvaluation.className = 'review-answers-block';
+
+    // Correct Answer
+    let correctAnswerNode = document.createElement("p");
+    correctAnswerNode.textContent = correctAnswer;
+    correctAnswerNode.className = 'review-correct-answer';
+    answersEvaluation.appendChild(correctAnswerNode);
+    
+    // Graded Answer
+    let gradedAnswerNode = document.createElement("p");
+    gradedAnswerNode.textContent = gradedAnswer;
+    gradedAnswerNode.className = 'review-graded-answer';
+    answersEvaluation.appendChild(gradedAnswerNode);
+
+    // Grade
+    let gradedNode = document.createElement("p");
+    gradedNode.textContent = grade;
+    gradedNode.className = 'review-graded-answer';
+    answersEvaluation.appendChild(gradedNode);
+
+    // Answers Evaluation
+    let correctButton = document.createElement("button");
+    correctButton.className = 'review-correct-answer-button';
+    let wrongButton = document.createElement("button");
+    wrongButton.className = 'review-graded-answer-button';
+
+    // correctButton.innerHTML = "true";
+    // wrongButton.innerHTML = "false";
+
+    correctButton.addEventListener("click", function (e) {
+        // Send true
+        this.sendEvaluation(true);
+    }.bind(socket), false);
+
+    wrongButton.addEventListener("click", function (e) {
+        // Send false
+        this.sendEvaluation(false);
+    }.bind(socket), false);
+
+    answersEvaluation.appendChild(correctButton);
+    answersEvaluation.appendChild(wrongButton);
 
     sectionCenter[0].appendChild(answersEvaluation);
     return true;
@@ -254,6 +317,10 @@ export function loadAsideDebugButtons(socket) {
     rateAnswersButton.innerHTML = "Rate Answers";
     asideLeftBlock[0].appendChild(rateAnswersButton);
 
+    let rateReviewButton = document.createElement("button");
+    rateReviewButton.innerHTML = "Review Answer";
+    asideLeftBlock[0].appendChild(rateReviewButton);
+
     let playerListButton = document.createElement("button");
     playerListButton.innerHTML = "Players List";
     asideLeftBlock[0].appendChild(playerListButton);
@@ -276,6 +343,10 @@ export function loadAsideDebugButtons(socket) {
     rateAnswersButton.addEventListener("click", function (e) {
         let players = [new Player(1, 'jaime'), new Player(2, 'jullian'), new Player(3, 'pedro')];
         LoadRecivedAnswer(null, players[0], 'answer');
+    })
+
+    rateReviewButton.addEventListener("click", function (e) {
+        LoadRecivedReview(socket, 'good', 'graded', 2);
     })
 
     playerListButton.addEventListener("click", function (e) {

@@ -101,7 +101,7 @@ h2 {
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    width: 25%;
+    width: 20%;
 }
 
 .aside-right {
@@ -109,7 +109,7 @@ h2 {
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    width: max-content;
+    width: 30%;
 }
 
 .section-center {
