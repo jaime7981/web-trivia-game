@@ -130,6 +130,9 @@ export class TriviaWebSocket {
             case 'game_result':
                 triviaViews.GameResult();
                 break;
+            case 'game_deleted':
+                window.location.href = './games.html';
+                break;
             default:
                 console.log(`Type '${responseType}' not handeled`);
                 break;
