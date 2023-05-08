@@ -78,6 +78,10 @@ export function askQuestion(socket) {
 
     let timeLeft = 59; // question_time -1
 
+    if (socket.game != null) {
+        timeLeft = socket.game.question_time;
+    }
+
     function updateTimer() {
         timerDiv.innerHTML = 'Time left: ' + timeLeft + ' seconds';
         if (timeLeft === 0) {
@@ -127,7 +131,7 @@ export function askQuestion(socket) {
     return true
 }
 
-export function sendAnswer(socket) {
+export async function sendAnswer(socket) {
     cleanSectionCenterContent();
     let sectionCenter = document.getElementsByClassName("section-center");
 
@@ -142,6 +146,10 @@ export function sendAnswer(socket) {
 
     let timeLeft = 59; // answer_time -1
 
+    if (socket.game != null) {
+        timeLeft = socket.game.answer_time;
+    }
+
     function updateTimer() {
         timerDiv.innerHTML = 'Time left: ' + timeLeft + ' seconds';
         if (timeLeft === 0) {
@@ -154,12 +162,14 @@ export function sendAnswer(socket) {
 
     const interval = setInterval(updateTimer, 1000);
 
-
     let answerBlock = document.createElement("div");
     answerBlock.className = "answer-block";
 
     let showQuestion = document.createElement("p");
     showQuestion.innerHTML = "Question: " + socket.triviaGame.question;
+
+    let showHelp = document.createElement("p");
+    showHelp.innerHTML = "Help: ";
 
     let setAnswer = document.createElement("input");
     setAnswer.type = "text";
@@ -171,8 +181,15 @@ export function sendAnswer(socket) {
     answerBlock.appendChild(showQuestion);
     answerBlock.appendChild(setAnswer);
     answerBlock.appendChild(sendAnswerButton);
-    sectionCenter[0].appendChild(answerBlock);
 
+    // AI API One Help
+    let recived_help_api_one = await fetchApiOneHelp(socket.triviaGame.question).then(recived_help => {
+        showHelp.innerHTML = recived_help;
+        answerBlock.appendChild(showHelp);
+    });
+
+    sectionCenter[0].appendChild(answerBlock);
+    
     sendAnswerButton.addEventListener("click", async function (e) {
         let answer = setAnswer.value;
         await this.sendAnswer(answer);
@@ -184,11 +201,44 @@ export function sendAnswer(socket) {
         playerBlock.className = "player-block";
 
         let playerStartGameInfo = document.createElement("p");
-        playerStartGameInfo.innerHTML = "Waiting for nosy to review the answers";
         
-        playerBlock.appendChild(playerStartGameInfo);
+        if (this.triviaGame.nosyId == this.loggedUser.id) {
+            // Nosy Section
+            playerStartGameInfo.innerHTML = "Waiting for users to send and review answers or until time ends";
+            playerBlock.appendChild(playerStartGameInfo);
+        }
+        else {
+            // Player Section
+            playerStartGameInfo.innerHTML = "Waiting for nosy to review the answers";
+            playerBlock.appendChild(playerStartGameInfo);
+        }    
         sectionCenter[0].appendChild(playerBlock);
     }.bind(socket), false);
+}
+
+async function fetchApiOneHelp(triviaQuestion) {
+    const url = 'https://simple-chatgpt-api.p.rapidapi.com/ask';
+    const options = {
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json',
+            'X-RapidAPI-Key': 'SIGN-UP-FOR-KEY',
+            'X-RapidAPI-Host': 'simple-chatgpt-api.p.rapidapi.com'
+        },
+        body: {
+            question: triviaQuestion
+        }
+    };
+
+    try {
+        const response = await fetch(url, options);
+        const result = await response.text();
+        console.log(result);
+        return result;
+    } catch (error) {
+        console.error(error);
+        return 'Error: API One failed to fetch help';
+    }
 }
 
 // Load one answer
@@ -295,6 +345,45 @@ export function LoadRecivedReview(socket, correctAnswer, gradedAnswer, grade) {
     answersEvaluation.appendChild(wrongButton);
 
     sectionCenter[0].appendChild(answersEvaluation);
+    return true;
+}
+
+// GameCanceled
+export function GameCanceled() {
+    cleanSectionCenterContent();
+    let sectionCenter = document.getElementsByClassName("section-center");
+
+    // Section Title
+    let headerName = document.createElement("h2");
+    headerName.textContent = "Game Canceled";
+    sectionCenter[0].appendChild(headerName);
+
+    return true;
+}
+
+// User Disqualified
+export function YouDisqualified() {
+    cleanSectionCenterContent();
+    let sectionCenter = document.getElementsByClassName("section-center");
+
+    // Section Title
+    let headerName = document.createElement("h2");
+    headerName.textContent = "You are disqualified";
+    sectionCenter[0].appendChild(headerName);
+
+    return true;
+}
+
+// Game Result
+export function GameResult() {
+    cleanSectionCenterContent();
+    let sectionCenter = document.getElementsByClassName("section-center");
+
+    // Section Title
+    let headerName = document.createElement("h2");
+    headerName.textContent = "Game Ended";
+    sectionCenter[0].appendChild(headerName);
+
     return true;
 }
 

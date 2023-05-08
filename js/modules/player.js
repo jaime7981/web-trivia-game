@@ -12,7 +12,7 @@ export class Player {
         this.playerScore = 0;
         this.isNosy = false;
         this.playerFaults = 0;
-        this.playerKO = true;
+        this.playerKO = false;
     }
 }
 
@@ -38,7 +38,7 @@ export function createPlayerStatusList(playerList) {
     gameStatusList.className = "players-status-aside";
 
     // Table Header Names
-    let header_list = ['ID', 'Name', 'Nosy', 'Status', 'Score'];
+    let header_list = ['ID', 'Name', 'Nosy', 'Status', 'Score', 'Faults', 'KO'];
     let headerNames = document.createElement("div");
     headerNames.className = 'player-status-header'
     for (let i = 0; i < header_list.length; i++) {
@@ -79,18 +79,14 @@ export function createPlayerStatusList(playerList) {
         playerContent.appendChild(playerScore);
 
         // Player Fauls?
-        /*
         let playerFaults = document.createElement("p");
         playerFaults.textContent = player.playerFaults;
         playerContent.appendChild(playerFaults);
-        */
 
         // Player KO?
-        /*
         let playerKO = document.createElement("p");
         playerKO.textContent = player.playerKO;
         playerContent.appendChild(playerKO);
-        */
 
         gameStatusList.appendChild(playerContent);
     });

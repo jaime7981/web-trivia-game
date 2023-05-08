@@ -51,6 +51,26 @@ export class TriviaGame {
         createPlayerStatusList(this.players);
     }
 
+    playerDisqualify(userId) {
+        for (let i = this.players.length - 1; i >= 0; i--) {
+            if (this.players[i].id == userId) {
+                this.players[i].playerKO = true;
+                break;
+            }
+        }
+        createPlayerStatusList(this.players);
+    }
+
+    userFault(userId, category) {
+        for (let i = this.players.length - 1; i >= 0; i--) {
+            if (this.players[i].id == userId) {
+                this.players[i].playerFaults = this.players[i].playerFaults + 1;
+                break;
+            }
+        }
+        createPlayerStatusList(this.players);
+    }
+
     deletedGame(game) {
         window.location.href = "./games.html";
     }

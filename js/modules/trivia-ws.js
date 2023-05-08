@@ -104,7 +104,23 @@ export class TriviaWebSocket {
                 break;
             case 'answer_time_ended':
                 this.triviaGame.answerTimeEnded();
-                // TODO: load review answer view
+                break;
+            case 'user_fault':
+                this.triviaGame.userFault(jsonResponse.player_id, jsonResponse.category);
+                break;
+            case 'user_disqualified':
+                if (this.loggedUser != null) {
+                    console.log(this.loggedUser);
+                    if (this.loggedUser.id == jsonResponse.player_id){
+                        this.triviaViews.YouDisqualified();
+                    }
+                }
+                this.triviaGame.playerDisqualify(jsonResponse.player_id);
+                break;
+            case 'game_canceled':
+                this.triviaViews.GameCanceled();
+            case 'game_result':
+                this.triviaViews.GameResult();
                 break;
             default:
                 console.log(`Type '${responseType}' not handeled`);
