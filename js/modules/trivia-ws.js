@@ -104,6 +104,13 @@ export class TriviaWebSocket {
                 break;
             case 'answer_time_ended':
                 this.triviaGame.answerTimeEnded();
+                // For nosy Player show a waiting view
+                if (this.loggedUser != null) {
+                    if (this.loggedUser.id == this.triviaGame.nosyId){
+                        console.log(this.loggedUser);
+                        triviaViews.NosyWaitReview();
+                    }
+                }
                 break;
             case 'user_fault':
                 this.triviaGame.userFault(jsonResponse.player_id, jsonResponse.category);
@@ -112,18 +119,20 @@ export class TriviaWebSocket {
                 if (this.loggedUser != null) {
                     console.log(this.loggedUser);
                     if (this.loggedUser.id == jsonResponse.player_id){
-                        this.triviaViews.YouDisqualified();
+                        triviaViews.YouDisqualified();
                     }
                 }
                 this.triviaGame.playerDisqualify(jsonResponse.player_id);
                 break;
             case 'game_canceled':
-                this.triviaViews.GameCanceled();
+                triviaViews.GameCanceled();
+                break;
             case 'game_result':
-                this.triviaViews.GameResult();
+                triviaViews.GameResult();
                 break;
             default:
                 console.log(`Type '${responseType}' not handeled`);
+                break;
             }
     }
 

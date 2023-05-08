@@ -168,9 +168,6 @@ export async function sendAnswer(socket) {
     let showQuestion = document.createElement("p");
     showQuestion.innerHTML = "Question: " + socket.triviaGame.question;
 
-    let showHelp = document.createElement("p");
-    showHelp.innerHTML = "Help: ";
-
     let setAnswer = document.createElement("input");
     setAnswer.type = "text";
     setAnswer.placeholder = "answer";
@@ -183,9 +180,16 @@ export async function sendAnswer(socket) {
     answerBlock.appendChild(sendAnswerButton);
 
     // AI API One Help
+    let showHelp = document.createElement("p");
     let recived_help_api_one = await fetchApiOneHelp(socket.triviaGame.question).then(recived_help => {
         showHelp.innerHTML = recived_help;
         answerBlock.appendChild(showHelp);
+    });
+
+    let showHelpTwo = document.createElement("p");
+    let recived_help_api_two = await fetchApiTwoHelp(socket.triviaGame.question).then(recived_help => {
+        showHelpTwo.innerHTML = recived_help;
+        answerBlock.appendChild(showHelpTwo);
     });
 
     sectionCenter[0].appendChild(answerBlock);
@@ -222,10 +226,38 @@ async function fetchApiOneHelp(triviaQuestion) {
         method: 'POST',
         headers: {
             'content-type': 'application/json',
-            'X-RapidAPI-Key': 'SIGN-UP-FOR-KEY',
+            'X-RapidAPI-Key': '',
             'X-RapidAPI-Host': 'simple-chatgpt-api.p.rapidapi.com'
         },
         body: {
+            question: triviaQuestion
+        }
+    };
+
+    try {
+        const response = await fetch(url, options);
+        const result = await response.text();
+        console.log(result);
+        return result;
+    } catch (error) {
+        console.error(error);
+        return 'Error: API One failed to fetch help';
+    }
+}
+
+async function fetchApiTwoHelp(triviaQuestion) {
+    const url = 'https://iamai.p.rapidapi.com/ask';
+    const options = {
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json',
+            'X-Forwarded-For': '<user\'s ip>',
+            'X-RapidAPI-Key': '',
+            'X-RapidAPI-Host': 'iamai.p.rapidapi.com'
+        },
+        body: {
+            consent: true,
+            ip: '::1',
             question: triviaQuestion
         }
     };
@@ -301,6 +333,26 @@ export function LoadRecivedReview(socket, correctAnswer, gradedAnswer, grade) {
     headerName.textContent = "Review Answer";
     sectionCenter[0].appendChild(headerName);
 
+    // Timer
+    let timerDiv = document.createElement('div');
+    timerDiv.className = 'timer-block';
+    sectionCenter[0].appendChild(timerDiv);
+
+    let timeLeft = 29; // answer_time -1
+
+    function updateTimer() {
+        timerDiv.innerHTML = 'Time left: ' + timeLeft + ' seconds';
+        if (timeLeft === 0) {
+            clearInterval(interval);
+            timerDiv.innerHTML = 'Time out';
+        } else {
+            timeLeft--;
+        }
+    }
+
+    const interval = setInterval(updateTimer, 1000);
+
+    // Review Answer Block
     let answersEvaluation = document.createElement("div");
     answersEvaluation.className = 'review-answers-block';
 
@@ -383,6 +435,43 @@ export function GameResult() {
     let headerName = document.createElement("h2");
     headerName.textContent = "Game Ended";
     sectionCenter[0].appendChild(headerName);
+
+    return true;
+}
+
+// Nosy Wait Review
+export function NosyWaitReview() {
+    cleanSectionCenterContent();
+    let sectionCenter = document.getElementsByClassName("section-center");
+
+    // Section Title
+    let headerName = document.createElement("h2");
+    headerName.textContent = "Waiting Review";
+    sectionCenter[0].appendChild(headerName);
+
+    // Timer
+    let timerDiv = document.createElement('div');
+    timerDiv.className = 'timer-block';
+    sectionCenter[0].appendChild(timerDiv);
+
+    let timeLeft = 29; // answer_time -1
+
+    function updateTimer() {
+        timerDiv.innerHTML = 'Time left: ' + timeLeft + ' seconds';
+        if (timeLeft === 0) {
+            clearInterval(interval);
+            timerDiv.innerHTML = 'Time out';
+        } else {
+            timeLeft--;
+        }
+    }
+
+    const interval = setInterval(updateTimer, 1000);
+
+    // Correct Answer
+    let info = document.createElement("p");
+    info.textContent = 'Waiting for the users to review their answers or for time to end';
+    sectionCenter[0].appendChild(info);
 
     return true;
 }
